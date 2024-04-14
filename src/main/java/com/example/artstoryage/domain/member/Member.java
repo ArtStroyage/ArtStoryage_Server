@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import com.example.artstoryage.domain.Artist;
 import com.example.artstoryage.domain.common.BaseEntity;
+import com.example.artstoryage.domain.enums.MemberRole;
 import com.example.artstoryage.domain.enums.SocialType;
 import com.example.artstoryage.domain.mapping.Comment;
 import com.example.artstoryage.domain.mapping.MemberTerm;
@@ -25,18 +26,27 @@ public class Member extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
   private String name;
 
+  @Column(nullable = false)
   private String nickName;
 
+  @Column(nullable = false)
   private String email;
 
-  @Embedded private Password password;
+  @Column(nullable = false)
+  @Embedded
+  private Password password;
 
+  @Column(nullable = false)
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
   private SocialType socialType;
+
+  @Enumerated(EnumType.STRING)
+  private MemberRole memberRole;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "artist_id")
@@ -51,4 +61,8 @@ public class Member extends BaseEntity {
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<Comment> comments = new ArrayList<>();
+
+  public void setMemberTerms(List<MemberTerm> memberTerms) {
+    this.memberTerms = memberTerms;
+  }
 }

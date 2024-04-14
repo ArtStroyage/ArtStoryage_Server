@@ -29,14 +29,23 @@ public class SecurityConfig {
   private final JwtRequestFilter jwtRequestFilter;
   private final JwtAuthExceptionHandlingFilter jwtAuthExceptionHandlingFilter;
 
-  private final String[] allowedUrls = {};
+
+  private final String[] allowedUrls = {
+    "/h2-console/**", "api/v1/members/signup", "api/v1/members/login", "api/v1/members/reissues"
+  };
+
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return web ->
         web.ignoring()
             .requestMatchers(
-                "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/health");
+                "/swagger-ui/**",
+                "/swagger-resources/**",
+                "/v3/api-docs/**",
+                "/health",
+                "/h2-console/**");
+
   }
 
   @Bean
