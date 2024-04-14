@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.MemberConverter;
+import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
+import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.service.MemberCommandService;
 
@@ -34,5 +36,15 @@ public class MemberController {
     return BaseResponse.onSuccess(
         GlobalErrorCode.CREATED,
         MemberConverter.toSignUpMemberResponse(memberCommandService.signUpMember(request)));
+  }
+
+  @Operation(summary = "로그인 API", description = "이메일, 비밀번호를 사용한 로그인을 진행합니다")
+  @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "성공"),
+  })
+  @PostMapping("/login")
+  @ResponseStatus(HttpStatus.CREATED)
+  public BaseResponse<TokenResponse> loginMember(@RequestBody LoginMemberRequest request) {
+    return BaseResponse.onSuccess(GlobalErrorCode.CREATED, memberCommandService.login(request));
   }
 }

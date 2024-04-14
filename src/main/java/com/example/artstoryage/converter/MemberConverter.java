@@ -14,6 +14,7 @@ import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.domain.member.Password;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
+import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 
 @Component
 public class MemberConverter {
@@ -49,5 +50,14 @@ public class MemberConverter {
 
   public static MemberTerm toMemberTerm(Member member, Term term) {
     return MemberTerm.builder().member(member).term(term).build();
+  }
+
+  public static TokenResponse toLoginMemberResponse(
+      Long memberId, String accessToken, String refreshToken) {
+    return TokenResponse.builder()
+        .memberId(memberId)
+        .accessToken(accessToken)
+        .refreshToken(refreshToken)
+        .build();
   }
 }
