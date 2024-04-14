@@ -12,7 +12,6 @@ public enum GlobalErrorCode {
   UPDATED(HttpStatus.ACCEPTED, "요청 성공 및 리소스 수정됨"),
   DELETED(HttpStatus.NO_CONTENT, "요청 성공 및 리소스 삭제됨"),
 
-  //  Member
   // 400 BAD_REQUEST - 잘못된 요청
   NOT_VALID_EMAIL(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일 입니다."),
   PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
@@ -23,6 +22,7 @@ public enum GlobalErrorCode {
   NOT_VALID_KEYWORD(HttpStatus.BAD_REQUEST, "유효하지 않은 검색어 입니다."),
   NOT_ENOUGH_POINTS(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
   INVALID_SEARCH_KEYWORD(HttpStatus.BAD_REQUEST, "검색 키워드가 유효하지 않습니다."),
+  NOT_AGREED_TERMS(HttpStatus.BAD_REQUEST, "필수 약관에 동의하지 않았습니다."),
 
   // 401 Unauthorized - 미인증
   TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰의 유효기간이 지났습니다."),
