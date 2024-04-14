@@ -16,4 +16,11 @@ public class MemberRequestDto {
     String phoneNumber;
     List<Long> agreedTerms;
   }
+
+  @Getter
+  public static class LoginMemberRequest {
+
+    String email;
+    String password;
+  }
 }
