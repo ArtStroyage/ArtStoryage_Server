@@ -29,9 +29,11 @@ public class SecurityConfig {
   private final JwtRequestFilter jwtRequestFilter;
   private final JwtAuthExceptionHandlingFilter jwtAuthExceptionHandlingFilter;
 
+
   private final String[] allowedUrls = {
     "/h2-console/**", "api/v1/members/signup", "api/v1/members/login", "api/v1/members/reissues"
   };
+
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
@@ -43,6 +45,7 @@ public class SecurityConfig {
                 "/v3/api-docs/**",
                 "/health",
                 "/h2-console/**");
+
   }
 
   @Bean
