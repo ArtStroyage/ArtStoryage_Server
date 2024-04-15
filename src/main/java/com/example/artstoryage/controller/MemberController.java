@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
@@ -46,5 +47,12 @@ public class MemberController {
   @ResponseStatus(HttpStatus.CREATED)
   public BaseResponse<TokenResponse> loginMember(@RequestBody LoginMemberRequest request) {
     return BaseResponse.onSuccess(GlobalErrorCode.CREATED, memberCommandService.login(request));
+  }
+
+  @Operation(summary = "reissue API", description = "토큰을 재발급합니다.")
+  @ApiResponse(responseCode = "200", description = "성공")
+  @PostMapping("/reissue")
+  public BaseResponse<TokenResponse> reissue(@RequestBody ReissueRequest request) {
+    return BaseResponse.onSuccess(memberCommandService.reissue(request));
   }
 }
