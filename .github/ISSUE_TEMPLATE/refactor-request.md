@@ -1,8 +1,8 @@
 ---
-name: Feature Request
-about: 새 기능을 추가합니다.
-title: ':sparkles:[Feat] : '
-labels: '\a2eeef feature'
+name: Refactor Request
+about: 코드를 리팩토링 합니다.
+title: ':recycle:[Refactor] : '
+labels: '\7057ff refactor'
 assignees: ''
 
 ---

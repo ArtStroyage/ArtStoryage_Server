@@ -1,8 +1,8 @@
 ---
-name: Feature Request
-about: 새 기능을 추가합니다.
-title: ':sparkles:[Feat] : '
-labels: '\a2eeef feature'
+name: HotFix Request
+about: 긴급 수정을 합니다.
+title: ':ambulance:[Hotfix] : '
+labels: '\e4e669 hotfix'
 assignees: ''
 
 ---
