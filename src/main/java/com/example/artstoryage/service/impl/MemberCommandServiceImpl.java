@@ -2,7 +2,10 @@ package com.example.artstoryage.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +15,7 @@ import com.example.artstoryage.domain.Term;
 import com.example.artstoryage.domain.mapping.MemberTerm;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -35,6 +39,10 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   private final MemberTermRepository memberTermRepository;
   private final JwtAuthProvider jwtAuthProvider;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final RedisTemplate<String, String> redisTemplate;
+
+  @Value("${jwt.refresh-token-validity}")
+  private Long refreshTokenValidityMilliseconds;
 
   @Override
   public Member signUpMember(SignUpMemberRequest request) {
@@ -72,5 +80,34 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     String refreshToken = jwtAuthProvider.generateRefreshToken(member.getId());
 
     return MemberConverter.toLoginMemberResponse(member.getId(), accessToken, refreshToken);
+  }
+
+  @Override
+  public TokenResponse reissue(ReissueRequest request) {
+    String refreshToken = request.getRefreshToken();
+
+    Long memberId = jwtAuthProvider.parseRefreshToken(refreshToken);
+
+    if (!refreshToken.equals(redisTemplate.opsForValue().get(memberId.toString()))) {
+      throw new MemberException(GlobalErrorCode.INVALID_TOKEN);
+    }
+
+    Member member =
+        memberRepository
+            .findById(memberId)
+            .orElseThrow(() -> new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+    String newAccessToken = jwtAuthProvider.generateAccessToken(member.getId());
+    String newRefreshToken = jwtAuthProvider.generateRefreshToken(member.getId());
+
+    redisTemplate
+        .opsForValue()
+        .set(
+            member.getId().toString(),
+            newRefreshToken,
+            refreshTokenValidityMilliseconds,
+            TimeUnit.MILLISECONDS);
+
+    return MemberConverter.toReissueResponse(memberId, newAccessToken, newRefreshToken);
   }
 }

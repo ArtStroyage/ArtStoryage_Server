@@ -60,4 +60,13 @@ public class MemberConverter {
         .refreshToken(refreshToken)
         .build();
   }
+
+  public static TokenResponse toReissueResponse(
+      Long memberId, String newAccessToken, String newRefreshToken) {
+    return TokenResponse.builder()
+        .memberId(memberId)
+        .accessToken(newAccessToken)
+        .refreshToken(newRefreshToken)
+        .build();
+  }
 }

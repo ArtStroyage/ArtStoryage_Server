@@ -23,4 +23,10 @@ public class MemberRequestDto {
     String email;
     String password;
   }
+
+  @Getter
+  public static class ReissueRequest {
+
+    String refreshToken;
+  }
 }
