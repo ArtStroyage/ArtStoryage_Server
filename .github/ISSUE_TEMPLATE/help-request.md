@@ -1,8 +1,8 @@
 ---
-name: Feature Request
-about: 새 기능을 추가합니다.
-title: ':sparkles:[Feat] : '
-labels: '\a2eeef feature'
+name: Help Wanted Request
+about: 도움을 요청합니다.
+title: ':sos:'
+labels: '\008672 help wanted'
 assignees: ''
 
 ---

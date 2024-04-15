@@ -1,8 +1,8 @@
 ---
-name: Feature Request
-about: 새 기능을 추가합니다.
-title: ':sparkles:[Feat] : '
-labels: '\a2eeef feature'
+name: Infra Request
+about: 인프라를 구성합니다.
+title: ':Construction_worker:[Infra] : '
+labels: '\ffffff infra'
 assignees: ''
 
 ---

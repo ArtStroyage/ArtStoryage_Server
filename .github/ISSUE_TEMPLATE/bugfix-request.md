@@ -1,8 +1,8 @@
 ---
-name: Feature Request
-about: 새 기능을 추가합니다.
-title: ':sparkles:[Feat] : '
-labels: '\a2eeef feature'
+name: Bugfix Request
+about: 버그를 수정합니다.
+title: ':bug:[Fix] : '
+labels: '\#d73a4a bugfix'
 assignees: ''
 
 ---
