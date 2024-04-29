@@ -64,7 +64,10 @@ public enum GlobalErrorCode {
 
   // Item
   ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 아이템입니다."),
-  ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "이미 구매한 아이템입니다.");
+  ALREADY_PURCHASED(HttpStatus.BAD_REQUEST, "이미 구매한 아이템입니다."),
+
+  // Artist
+  ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND, "작가 정보가 등록되지 않았습니다.");
 
   private final HttpStatus httpStatus;
   private final String message;

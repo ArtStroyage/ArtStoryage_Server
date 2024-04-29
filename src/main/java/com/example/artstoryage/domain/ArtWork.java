@@ -1,5 +1,6 @@
 package com.example.artstoryage.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,11 +40,17 @@ public class ArtWork extends BaseEntity {
 
   private String intention;
 
-  private String isAuction;
+  private Boolean isAuction;
 
   private Integer auctionStartPrice;
 
-  private Date auctionClosingTime;
+  private LocalDateTime auctionClosingTime;
+
+  private Boolean isReg;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "artist_id")
+  private Artist artist;
 
   @OneToMany(mappedBy = "artWork", cascade = CascadeType.ALL)
   private List<ArtWorkPrice> artWorkPrices = new ArrayList<>();
