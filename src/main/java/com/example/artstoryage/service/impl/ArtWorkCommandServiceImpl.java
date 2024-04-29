@@ -10,7 +10,7 @@ import com.example.artstoryage.domain.Artist;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
 import com.example.artstoryage.exception.GlobalErrorCode;
-import com.example.artstoryage.exception.custom.MemberException;
+import com.example.artstoryage.exception.custom.ArtistException;
 import com.example.artstoryage.repository.ArtWorkRepository;
 import com.example.artstoryage.service.ArtWorkCommandService;
 
@@ -29,6 +29,6 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
       Artist artist = member.getArtist();
       return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
     }
-    throw new MemberException(GlobalErrorCode.MEMBER_INFO_NOT_FOUND);
+    throw new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND);
   }
 }
