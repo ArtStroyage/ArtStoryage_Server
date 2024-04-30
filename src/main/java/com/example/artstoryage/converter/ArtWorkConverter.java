@@ -34,4 +34,11 @@ public class ArtWorkConverter {
         .isReg(artWork.getIsReg())
         .build();
   }
+
+  public static AllowArtWorkResponse toAllowArtWorkResponse(ArtWork artWork) {
+    return AllowArtWorkResponse.builder()
+        .title(artWork.getTitle())
+        .isReg(artWork.getIsReg())
+        .build();
+  }
 }
