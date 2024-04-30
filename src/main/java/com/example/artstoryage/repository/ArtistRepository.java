@@ -9,6 +9,4 @@ import com.example.artstoryage.domain.member.Member;
 
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
   Optional<Artist> findByMember(Member member);
-
-  Artist findByMemberId(Long memberId);
 }

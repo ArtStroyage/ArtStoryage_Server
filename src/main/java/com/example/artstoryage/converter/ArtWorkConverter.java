@@ -1,5 +1,8 @@
 package com.example.artstoryage.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.example.artstoryage.domain.ArtWork;
@@ -33,6 +36,18 @@ public class ArtWorkConverter {
         .title(artWork.getTitle())
         .isReg(artWork.getIsReg())
         .build();
+  }
+
+  public static List<RegArtWorkResponse> toRegArtWorkResponseList(List<ArtWork> artWorkList) {
+    List<RegArtWorkResponse> responseList = new ArrayList<>();
+
+    for (ArtWork artWork : artWorkList) {
+      RegArtWorkResponse response =
+          RegArtWorkResponse.builder().artWorkId(artWork.getId()).title(artWork.getTitle()).build();
+      responseList.add(response);
+    }
+
+    return responseList;
   }
 
   public static AllowArtWorkResponse toAllowArtWorkResponse(ArtWork artWork) {

@@ -1,5 +1,7 @@
 package com.example.artstoryage.common;
 
+import java.util.List;
+
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +26,10 @@ public class BaseResponse<T> {
 
   // 성공한 경우 응답 생성
   public static <T> BaseResponse<T> onSuccess(T data) {
+    return new BaseResponse<>(true, "200", "요청에 성공하였습니다.", data);
+  }
+
+  public static <T> BaseResponse<List<T>> onSuccess(List<T> data) {
     return new BaseResponse<>(true, "200", "요청에 성공하였습니다.", data);
   }
 

@@ -1,5 +1,7 @@
 package com.example.artstoryage.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/artworks")
+@RequestMapping("/api/v1/artworks/registration")
 @Tag(name = "🖼️ ArtWork", description = "예술 작품 관련 API")
 public class ArtWorkController {
 
@@ -30,7 +32,7 @@ public class ArtWorkController {
 
   @Operation(summary = "입점 신청 API", description = "입점 신청을 진행합니다")
   @ApiResponses({@ApiResponse(responseCode = "201", description = "성공")})
-  @PostMapping("/registration")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public BaseResponse<RegArtWorkResponse> regArtWork(
       @Parameter(hidden = true) @AuthMember Member member, @RequestBody RegArtWorkRequest request) {
@@ -41,7 +43,7 @@ public class ArtWorkController {
 
   @Operation(summary = "입점 신청 승인 API", description = "입점 신청을 승인합니다")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
-  @PutMapping("/registration/{artWorkId}")
+  @PutMapping("/{artWorkId}")
   @ResponseStatus(HttpStatus.OK)
   public BaseResponse<AllowArtWorkResponse> regArtWork(@Parameter @PathVariable Long artWorkId) {
     return BaseResponse.onSuccess(
@@ -49,9 +51,20 @@ public class ArtWorkController {
         ArtWorkConverter.toAllowArtWorkResponse(artWorkCommandService.allowArtWork(artWorkId)));
   }
 
-  @Operation(summary = "입점 신청 삭제 API", description = "입점 신청을 삭제합니다")
+  @Operation(summary = "작가별 작품 조회 API", description = "작가별 작품 조회")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
-  @DeleteMapping("/registration/{artWorkId}")
+  @GetMapping("/{artistId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<List<RegArtWorkResponse>> getArtWorks(
+      @Parameter @PathVariable Long artistId) {
+    return BaseResponse.onSuccess(
+        ArtWorkConverter.toRegArtWorkResponseList(
+            artWorkCommandService.getArtWorksByArtist(artistId)));
+  }
+
+  @Operation(summary = "입점 신청 삭제 API", description = "입점 신청을 삭제합니다")
+  @ApiResponses({@ApiResponse(responseCode = "204", description = "성공")})
+  @DeleteMapping("/{artWorkId}")
   @ResponseStatus(HttpStatus.OK)
   public BaseResponse<GlobalErrorCode> deleteArtwork(@Parameter @PathVariable Long artWorkId) {
     artWorkCommandServiceImpl.deleteArtWork(artWorkId);
