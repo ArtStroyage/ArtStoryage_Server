@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 public class ArtWorkController {
 
   private final ArtWorkCommandServiceImpl artWorkCommandService;
-  private final ArtWorkCommandServiceImpl artWorkCommandServiceImpl;
 
   @Operation(summary = "입점 신청 API", description = "입점 신청을 진행합니다")
   @ApiResponses({@ApiResponse(responseCode = "201", description = "성공")})
@@ -44,7 +43,7 @@ public class ArtWorkController {
   @DeleteMapping("/registration/{artWorkId}")
   @ResponseStatus(HttpStatus.OK)
   public BaseResponse<GlobalErrorCode> deleteArtwork(@Parameter @PathVariable Long artWorkId) {
-    artWorkCommandServiceImpl.deleteArtWork(artWorkId);
+    artWorkCommandService.deleteArtWork(artWorkId);
     return BaseResponse.onSuccess(GlobalErrorCode.DELETED);
   }
 }
