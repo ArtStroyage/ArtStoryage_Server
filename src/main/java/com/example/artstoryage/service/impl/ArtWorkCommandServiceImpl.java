@@ -13,7 +13,6 @@ import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.exception.custom.ArtWorkException;
 import com.example.artstoryage.exception.custom.ArtistException;
 import com.example.artstoryage.repository.ArtWorkRepository;
-import com.example.artstoryage.repository.ArtistRepository;
 import com.example.artstoryage.service.ArtWorkCommandService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
 
   private final ArtWorkRepository artWorkRepository;
-  private final ArtistRepository artistRepository;
 
   @Override
   public ArtWork regArtWork(Member member, RegArtWorkRequest request) {
