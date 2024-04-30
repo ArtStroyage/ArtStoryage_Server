@@ -7,4 +7,6 @@ import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
 public interface ArtWorkCommandService {
 
   ArtWork regArtWork(Member member, RegArtWorkRequest request);
+
+  void deleteArtWork(Long artWorkId);
 }
