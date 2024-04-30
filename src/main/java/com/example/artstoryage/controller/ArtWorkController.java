@@ -41,10 +41,9 @@ public class ArtWorkController {
 
   @Operation(summary = "입점 신청 삭제 API", description = "입점 신청을 삭제합니다")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
-  @DeleteMapping("/registration/{artwork_id}")
+  @DeleteMapping("/registration/{artWorkId}")
   @ResponseStatus(HttpStatus.OK)
-  public BaseResponse<GlobalErrorCode> deleteArtwork(
-      @Parameter(hidden = true) @PathVariable(name = "artwork_id") Long artWorkId) {
+  public BaseResponse<GlobalErrorCode> deleteArtwork(@Parameter @PathVariable Long artWorkId) {
     artWorkCommandServiceImpl.deleteArtWork(artWorkId);
     return BaseResponse.onSuccess(GlobalErrorCode.DELETED);
   }
