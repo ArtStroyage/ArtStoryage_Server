@@ -65,4 +65,8 @@ public class Member extends BaseEntity {
   public void setMemberTerms(List<MemberTerm> memberTerms) {
     this.memberTerms = memberTerms;
   }
+
+  public void setArtist(Artist artist) {
+    this.artist = artist;
+  }
 }
