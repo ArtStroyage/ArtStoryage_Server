@@ -7,15 +7,15 @@ import lombok.Getter;
 public class ArtWorkRequestDto {
   @Getter
   public static class RegArtWorkRequest {
-    private String imageLink;
-    private String title;
-    private Date artWorkCreatedAt;
-    private Integer sizeWide;
-    private Integer sizeHeight;
-    private Boolean isFrame;
-    private String description;
-    private String intention;
-    private Boolean isAuction;
-    private Integer auctionStartPrice;
+    String imageLink;
+    String title;
+    Date artWorkCreatedAt;
+    Integer sizeWide;
+    Integer sizeHeight;
+    Boolean isFrame;
+    String description;
+    String intention;
+    Boolean isAuction;
+    Integer auctionStartPrice;
   }
 }
