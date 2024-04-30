@@ -28,12 +28,24 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
 
   @Override
   public ArtWork regArtWork(Member member, RegArtWorkRequest request) {
-    Artist artist = artistRepository.findByMemberId(member.getId());
+    Artist artist =
+        artistRepository
+            .findByMember(member)
+            .orElseThrow(() -> new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND));
 
-    if (artist != null) {
-      return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
-    }
-    throw new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND);
+    return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
+  }
+
+  @Override
+  public ArtWork allowArtWork(Long artWorkId) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    artWork.allowArtWork();
+
+    return artWork;
   }
 
   @Override

@@ -57,4 +57,8 @@ public class ArtWork extends BaseEntity {
 
   @OneToMany(mappedBy = "artWork", cascade = CascadeType.ALL)
   private List<ArtWorkWish> artWorkWishes = new ArrayList<>();
+
+  public void allowArtWork() {
+    this.isReg = true;
+  }
 }

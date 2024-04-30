@@ -39,6 +39,16 @@ public class ArtWorkController {
         ArtWorkConverter.toRegArtWorkResponse(artWorkCommandService.regArtWork(member, request)));
   }
 
+  @Operation(summary = "입점 신청 승인 API", description = "입점 신청을 승인합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @PutMapping("/registration/{artWorkId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<AllowArtWorkResponse> regArtWork(@Parameter @PathVariable Long artWorkId) {
+    return BaseResponse.onSuccess(
+        GlobalErrorCode.UPDATED,
+        ArtWorkConverter.toAllowArtWorkResponse(artWorkCommandService.allowArtWork(artWorkId)));
+  }
+
   @Operation(summary = "입점 신청 삭제 API", description = "입점 신청을 삭제합니다")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @DeleteMapping("/registration/{artWorkId}")

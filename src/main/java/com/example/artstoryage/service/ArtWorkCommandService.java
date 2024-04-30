@@ -8,5 +8,7 @@ public interface ArtWorkCommandService {
 
   ArtWork regArtWork(Member member, RegArtWorkRequest request);
 
+  ArtWork allowArtWork(Long artWorkId);
+
   void deleteArtWork(Long artWorkId);
 }
