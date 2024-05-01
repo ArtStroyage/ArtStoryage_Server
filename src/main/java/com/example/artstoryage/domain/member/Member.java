@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.persistence.*;
 
 import com.example.artstoryage.domain.Artist;
+import com.example.artstoryage.domain.Post;
 import com.example.artstoryage.domain.common.BaseEntity;
 import com.example.artstoryage.domain.enums.MemberRole;
 import com.example.artstoryage.domain.enums.SocialType;
@@ -61,6 +62,9 @@ public class Member extends BaseEntity {
 
   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
   private List<Comment> comments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private List<Post> posts = new ArrayList<>();
 
   public void setMemberTerms(List<MemberTerm> memberTerms) {
     this.memberTerms = memberTerms;

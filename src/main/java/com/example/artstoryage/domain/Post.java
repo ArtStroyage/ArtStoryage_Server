@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import com.example.artstoryage.domain.common.BaseEntity;
 import com.example.artstoryage.domain.enums.PostCategory;
 import com.example.artstoryage.domain.mapping.Comment;
+import com.example.artstoryage.domain.member.Member;
 
 import lombok.*;
 
@@ -36,4 +37,12 @@ public class Post extends BaseEntity {
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   private List<PostImage> postImages = new ArrayList<>();
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member")
+  private Member member;
+
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "outline")
+  private Outline outline;
 }
