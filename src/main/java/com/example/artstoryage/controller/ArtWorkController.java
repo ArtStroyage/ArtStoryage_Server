@@ -14,6 +14,7 @@ import com.example.artstoryage.dto.response.ArtWorkResponseDto.AllowArtWorkRespo
 import com.example.artstoryage.dto.response.ArtWorkResponseDto.RegArtWorkResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.service.ArtWorkCommandService;
+import com.example.artstoryage.service.ArtWorkQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class ArtWorkController {
 
   private final ArtWorkCommandService artWorkCommandService;
+  private final ArtWorkQueryService artWorkQueryService;
 
   @Operation(summary = "입점 신청 API", description = "입점 신청을 진행합니다")
   @ApiResponses({@ApiResponse(responseCode = "201", description = "성공")})
@@ -59,7 +61,7 @@ public class ArtWorkController {
       @Parameter @PathVariable Long artistId) {
     return BaseResponse.onSuccess(
         ArtWorkConverter.toRegArtWorkResponseList(
-            artWorkCommandService.getArtWorksByArtist(artistId)));
+            artWorkQueryService.getArtWorksByArtist(artistId)));
   }
 
   @Operation(summary = "입점 신청 삭제 API", description = "입점 신청을 삭제합니다")

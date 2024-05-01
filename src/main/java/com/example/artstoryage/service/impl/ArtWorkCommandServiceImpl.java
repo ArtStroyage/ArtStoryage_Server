@@ -1,7 +1,5 @@
 package com.example.artstoryage.service.impl;
 
-import java.util.List;
-
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -48,17 +46,6 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
     artWork.allowArtWork();
 
     return artWork;
-  }
-
-  @Override
-  public List<ArtWork> getArtWorksByArtist(Long artistId) {
-    final List<ArtWork> artWorkList = artWorkRepository.findByArtistId(artistId);
-
-    if (artWorkList.isEmpty()) {
-      throw new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND);
-    }
-
-    return artWorkList;
   }
 
   @Override
