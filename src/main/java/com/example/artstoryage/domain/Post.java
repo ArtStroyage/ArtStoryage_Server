@@ -38,7 +38,8 @@ public class Post extends BaseEntity {
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
   private List<PostImage> postImages = new ArrayList<>();
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member")
   private Member member;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
