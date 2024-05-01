@@ -10,8 +10,10 @@ import com.example.artstoryage.domain.Artist;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
 import com.example.artstoryage.exception.GlobalErrorCode;
+import com.example.artstoryage.exception.custom.ArtWorkException;
 import com.example.artstoryage.exception.custom.ArtistException;
 import com.example.artstoryage.repository.ArtWorkRepository;
+import com.example.artstoryage.repository.ArtistRepository;
 import com.example.artstoryage.service.ArtWorkCommandService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,13 +24,36 @@ import lombok.RequiredArgsConstructor;
 public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
 
   private final ArtWorkRepository artWorkRepository;
+  private final ArtistRepository artistRepository;
 
   @Override
   public ArtWork regArtWork(Member member, RegArtWorkRequest request) {
-    if (member.getArtist() != null) {
-      Artist artist = member.getArtist();
-      return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
+    Artist artist =
+        artistRepository
+            .findByMember(member)
+            .orElseThrow(() -> new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND));
+
+    return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
+  }
+
+  @Override
+  public ArtWork allowArtWork(Long artWorkId) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    artWork.allowArtWork();
+
+    return artWork;
+  }
+
+  @Override
+  public void deleteArtWork(Long artWorkId) {
+    if (!artWorkRepository.existsById(artWorkId)) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND);
     }
-    throw new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND);
+
+    artWorkRepository.deleteById(artWorkId);
   }
 }
