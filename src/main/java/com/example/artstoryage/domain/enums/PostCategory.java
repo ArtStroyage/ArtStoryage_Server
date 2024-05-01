@@ -1,3 +1,6 @@
 package com.example.artstoryage.domain.enums;
 
-public enum PostCategory {}
+public enum PostCategory {
+  EXHIBITION,
+  POST
+}
