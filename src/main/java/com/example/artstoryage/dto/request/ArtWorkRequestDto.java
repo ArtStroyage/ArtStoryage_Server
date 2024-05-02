@@ -15,7 +15,19 @@ public class ArtWorkRequestDto {
     Boolean isFrame;
     String description;
     String intention;
-    Boolean isAuction;
+    Integer auctionStartPrice;
+  }
+
+  @Getter
+  public static class UpdateArtWorkRequest {
+    String imageLink;
+    String title;
+    Date artWorkCreatedAt;
+    Integer sizeWide;
+    Integer sizeHeight;
+    Boolean isFrame;
+    String description;
+    String intention;
     Integer auctionStartPrice;
   }
 }

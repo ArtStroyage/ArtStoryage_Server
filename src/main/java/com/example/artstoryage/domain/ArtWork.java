@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import com.example.artstoryage.domain.common.BaseEntity;
 import com.example.artstoryage.domain.mapping.ArtWorkPrice;
 import com.example.artstoryage.domain.mapping.ArtWorkWish;
+import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
 
 import lombok.*;
 
@@ -60,5 +61,17 @@ public class ArtWork extends BaseEntity {
 
   public void allowArtWork() {
     this.isReg = true;
+  }
+
+  public void updateArtWork(UpdateArtWorkRequest request) {
+    this.imageLink = request.getImageLink();
+    this.title = request.getTitle();
+    this.artWorkCreatedAt = request.getArtWorkCreatedAt();
+    this.sizeWide = request.getSizeWide();
+    this.sizeHeight = request.getSizeHeight();
+    this.isFrame = request.getIsFrame();
+    this.description = request.getDescription();
+    this.intention = request.getIntention();
+    this.auctionStartPrice = request.getAuctionStartPrice();
   }
 }

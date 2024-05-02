@@ -49,6 +49,18 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
   }
 
   @Override
+  public ArtWork updateRegArtWork(Long artWorkId, UpdateArtWorkRequest request) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    artWork.updateArtWork(request);
+
+    return artWork;
+  }
+
+  @Override
   public void deleteArtWork(Long artWorkId) {
     if (!artWorkRepository.existsById(artWorkId)) {
       throw new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND);
