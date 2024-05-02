@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 
 import com.example.artstoryage.domain.Artist;
 import com.example.artstoryage.domain.member.Member;
-import com.example.artstoryage.dto.request.ArtistRequestDto.CreateArtistRequest;
-import com.example.artstoryage.dto.response.ArtistResponseDto.CreateArtistResponse;
+import com.example.artstoryage.dto.request.ArtistRequestDto.*;
+import com.example.artstoryage.dto.response.ArtistResponseDto.*;
 
 @Component
 public class ArtistConverter {
@@ -24,5 +24,17 @@ public class ArtistConverter {
 
   public static CreateArtistResponse toCreateArtistResponse(Artist artist) {
     return CreateArtistResponse.builder().artistId(artist.getId()).name(artist.getName()).build();
+  }
+
+  public static GetArtistResponse toGetArtistResponse(Artist artist) {
+    return GetArtistResponse.builder()
+        .artistId(artist.getId())
+        .name(artist.getName())
+        .profileImageLink(artist.getProfileImageLink())
+        .genre(artist.getGenre())
+        .introduction(artist.getIntroduction())
+        .history(artist.getHistory())
+        .artistUrls(artist.getArtistUrls())
+        .build();
   }
 }
