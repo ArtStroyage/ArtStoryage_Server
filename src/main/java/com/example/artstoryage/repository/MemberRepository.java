@@ -9,4 +9,6 @@ import com.example.artstoryage.domain.member.Member;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
   Optional<Member> findByEmail(String email);
+
+  Optional<Member> findByNickName(String nickName);
 }

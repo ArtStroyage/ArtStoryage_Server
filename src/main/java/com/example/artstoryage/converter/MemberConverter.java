@@ -15,6 +15,8 @@ import com.example.artstoryage.domain.member.Password;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
+import com.example.artstoryage.oAuth.AuthToken;
+import com.example.artstoryage.oAuth.OAuthInfoResponse;
 
 @Component
 public class MemberConverter {
@@ -67,6 +69,23 @@ public class MemberConverter {
         .memberId(memberId)
         .accessToken(newAccessToken)
         .refreshToken(newRefreshToken)
+        .build();
+  }
+
+  public static TokenResponse toKakaoLogin(AuthToken authToken) {
+    return TokenResponse.builder()
+        .accessToken(authToken.getAccessToken())
+        .refreshToken(authToken.getRefreshToken())
+        .build();
+  }
+
+  // ToDo - 나중에 비즈앱으로 전환 시 다른 Member 요소 추가
+  public static SignUpMemberRequest toMemberKakaoRequest(
+      OAuthInfoResponse oAuthInfoResponse, List<Long> termList, String password) {
+    return SignUpMemberRequest.builder()
+        .nickName(oAuthInfoResponse.getNickname())
+        .password(password)
+        .agreedTerms(termList)
         .build();
   }
 }

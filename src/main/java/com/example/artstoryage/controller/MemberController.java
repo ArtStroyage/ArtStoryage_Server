@@ -11,6 +11,7 @@ import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
+import com.example.artstoryage.kakao.KakaoLoginParams;
 import com.example.artstoryage.service.MemberCommandService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,5 +55,16 @@ public class MemberController {
   @PostMapping("/reissue")
   public BaseResponse<TokenResponse> reissue(@RequestBody ReissueRequest request) {
     return BaseResponse.onSuccess(memberCommandService.reissue(request));
+  }
+
+  @Operation(summary = "카카오 API", description = "카카오로그인을 합니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "성공"),
+  })
+  @PostMapping("/kakao")
+  @ResponseStatus(HttpStatus.CREATED)
+  public BaseResponse<TokenResponse> loginKakao(@RequestBody KakaoLoginParams params) {
+    return BaseResponse.onSuccess(
+        MemberConverter.toKakaoLogin(memberCommandService.loginKakao(params)));
   }
 }

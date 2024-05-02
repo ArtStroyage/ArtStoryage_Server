@@ -2,6 +2,7 @@ package com.example.artstoryage.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.exception.custom.MemberException;
 import com.example.artstoryage.exception.custom.TermException;
+import com.example.artstoryage.oAuth.*;
 import com.example.artstoryage.repository.MemberRepository;
 import com.example.artstoryage.repository.MemberTermRepository;
 import com.example.artstoryage.repository.TermRepository;
@@ -40,9 +42,14 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   private final JwtAuthProvider jwtAuthProvider;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final RedisTemplate<String, String> redisTemplate;
+  private final AuthTokenGenerator authTokensGenerator;
+  private final RequestOAuthInfoService requestOAuthInfoService;
 
   @Value("${jwt.refresh-token-validity}")
   private Long refreshTokenValidityMilliseconds;
+
+  @Value("${virtual.password}")
+  private String password;
 
   @Override
   public Member signUpMember(SignUpMemberRequest request) {
@@ -109,5 +116,26 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             TimeUnit.MILLISECONDS);
 
     return MemberConverter.toReissueResponse(memberId, newAccessToken, newRefreshToken);
+  }
+
+  @Override
+  public Member createOrGetKakaoMember(OAuthInfoResponse oAuthInfoResponse) {
+    List<Long> termList = Arrays.asList(1L, 2L);
+
+    // ToDO - 나중에 카카오에서 비즈앱 승인하면 이메일로 검색
+    Optional<Member> findMember = memberRepository.findByNickName(oAuthInfoResponse.getNickname());
+    if (findMember.isPresent()) {
+      return findMember.get();
+    } else {
+      return signUpMember(
+          MemberConverter.toMemberKakaoRequest(oAuthInfoResponse, termList, password));
+    }
+  }
+
+  @Override
+  public AuthToken loginKakao(OAuthLoginParams params) {
+    OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
+    Long userId = createOrGetKakaoMember(oAuthInfoResponse).getId();
+    return authTokensGenerator.generate(userId);
   }
 }

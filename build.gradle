@@ -103,8 +103,10 @@ dependencies {
 
     testImplementation "org.mockito:mockito-inline:3.4.0"
 
-
     implementation 'com.auth0:java-jwt:3.18.2'
+
+    // oAuth
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     // security test
     testImplementation 'org.springframework.security:spring-security-test'

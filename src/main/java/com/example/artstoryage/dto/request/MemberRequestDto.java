@@ -2,11 +2,13 @@ package com.example.artstoryage.dto.request;
 
 import java.util.List;
 
+import lombok.Builder;
 import lombok.Getter;
 
 public class MemberRequestDto {
 
   @Getter
+  @Builder
   public static class SignUpMemberRequest {
 
     String name;
