@@ -30,7 +30,11 @@ public class SecurityConfig {
   private final JwtAuthExceptionHandlingFilter jwtAuthExceptionHandlingFilter;
 
   private final String[] allowedUrls = {
-    "/h2-console/**", "api/v1/members/signup", "api/v1/members/login", "api/v1/members/reissue"
+    "/h2-console/**",
+    "api/v1/members/signup",
+    "api/v1/members/login",
+    "api/v1/members/reissue",
+    "api/v1/members/kakao"
   };
 
   @Bean

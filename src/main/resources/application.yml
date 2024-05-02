@@ -39,3 +39,16 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+---
+#kakao
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+---
+virtual:
+  password: ${KAKAO_PASSWORD}

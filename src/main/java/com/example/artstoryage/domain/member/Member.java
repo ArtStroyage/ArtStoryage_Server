@@ -27,20 +27,16 @@ public class Member extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false)
   private String nickName;
 
-  @Column(nullable = false)
   private String email;
 
   @Column(nullable = false)
   @Embedded
   private Password password;
 
-  @Column(nullable = false)
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
@@ -48,6 +44,8 @@ public class Member extends BaseEntity {
 
   @Enumerated(EnumType.STRING)
   private MemberRole memberRole;
+
+  private Long providerId;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "artist_id")
