@@ -6,4 +6,6 @@ import com.example.artstoryage.domain.ArtWork;
 
 public interface ArtWorkQueryService {
   List<ArtWork> getArtWorksByArtist(Long artistId);
+
+  ArtWork getApprovedArtWork(Long artWorkId);
 }
