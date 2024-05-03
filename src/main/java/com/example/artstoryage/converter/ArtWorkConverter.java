@@ -24,7 +24,6 @@ public class ArtWorkConverter {
         .isFrame(request.getIsFrame())
         .description(request.getDescription())
         .intention(request.getIntention())
-        .isAuction(request.getIsAuction())
         .auctionStartPrice(request.getAuctionStartPrice())
         .isReg(false)
         .build();
@@ -55,5 +54,19 @@ public class ArtWorkConverter {
 
   public static ArtWorkResponse toApprovedArtWorkResponse(ArtWork artWork) {
     return ArtWorkResponse.builder().title(artWork.getTitle()).isReg(artWork.getIsReg()).build();
+  }
+
+  public static ArtWorkResponse toUpdatedArtWorkResponse(ArtWork artWork) {
+    return ArtWorkResponse.builder()
+        .imageLink(artWork.getImageLink())
+        .title(artWork.getTitle())
+        .artWorkCreatedAt(artWork.getArtWorkCreatedAt())
+        .sizeWide(artWork.getSizeWide())
+        .sizeHeight(artWork.getSizeHeight())
+        .isFrame(artWork.getIsFrame())
+        .description(artWork.getDescription())
+        .intention(artWork.getIntention())
+        .auctionStartPrice(artWork.getAuctionStartPrice())
+        .build();
   }
 }

@@ -74,9 +74,21 @@ public class ArtWorkController {
             artWorkQueryService.getArtWorksByArtist(artistId)));
   }
 
+  @Operation(summary = "작품 등록 신청 수정 API", description = "작품 등록 신청을 수정합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @PutMapping("/{artWorkId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<ArtWorkResponse> updateRegArtWork(
+      @Parameter @PathVariable Long artWorkId, @RequestBody UpdateArtWorkRequest request) {
+    return BaseResponse.onSuccess(
+        GlobalErrorCode.UPDATED,
+        ArtWorkConverter.toUpdatedArtWorkResponse(
+            artWorkCommandService.updateRegArtWork(artWorkId, request)));
+  }
+
   @Operation(summary = "작품 등록 취소 API", description = "작품 등록을 취소합니다")
   @ApiResponses({@ApiResponse(responseCode = "204", description = "성공")})
-  @DeleteMapping("/registration/cancel/{artWorkId}")
+  @DeleteMapping("/registration/{artWorkId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public BaseResponse<GlobalErrorCode> deleteArtwork(@Parameter @PathVariable Long artWorkId) {
     artWorkCommandService.deleteArtWork(artWorkId);

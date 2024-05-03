@@ -10,5 +10,7 @@ public interface ArtWorkCommandService {
 
   ArtWork approveArtWork(Long artWorkId);
 
+  ArtWork updateRegArtWork(Long artWorkId, UpdateArtWorkRequest request);
+
   void deleteArtWork(Long artWorkId);
 }
