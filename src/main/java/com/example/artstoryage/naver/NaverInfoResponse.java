@@ -1,4 +1,4 @@
-package com.example.artstoryage.kakao;
+package com.example.artstoryage.naver;
 
 import com.example.artstoryage.oAuth.OAuthInfoResponse;
 import com.example.artstoryage.oAuth.OAuthProvider;
@@ -9,31 +9,24 @@ import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoInfoResponse implements OAuthInfoResponse {
+public class NaverInfoResponse implements OAuthInfoResponse {
 
-  // ToDo - 비즈앱 전환 시 동의 항목 Member 요소 추가
-  @JsonProperty("kakao_account")
-  private KakaoAccount kakaoAccount;
-
-  @Getter
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  static class KakaoAccount {
-    private KakaoProfile profile;
-  }
+  @JsonProperty("response")
+  private Response response;
 
   @Getter
   @JsonIgnoreProperties(ignoreUnknown = true)
-  static class KakaoProfile {
+  static class Response {
     private String nickname;
   }
 
   @Override
   public String getNickname() {
-    return kakaoAccount.profile.nickname;
+    return response.nickname;
   }
 
   @Override
   public OAuthProvider getOAuthProvider() {
-    return OAuthProvider.KAKAO;
+    return OAuthProvider.NAVER;
   }
 }

@@ -16,6 +16,8 @@ spring:
     console:
       enabled: true
       path: ${H2_PATH}
+      settings:
+        web-allow-others: true
   datasource:
     url: ${H2_URL}
     driver-class-name: org.h2.Driver
@@ -41,7 +43,7 @@ spring:
       port: ${REDIS_PORT}
 
 ---
-#kakao
+#social
 oauth:
   kakao:
     client-id: ${KAKAO_CLIENT_ID}
@@ -49,6 +51,12 @@ oauth:
     url:
       auth: https://kauth.kakao.com
       api: https://kapi.kakao.com
+  naver:
+    secret: ${NAVER_CLIENT_SECRET}
+    client-id: ${NAVER_CLIENT_ID}
+    url:
+      auth: https://nid.naver.com
+      api: https://openapi.naver.com
 ---
 virtual:
   password: ${KAKAO_PASSWORD}

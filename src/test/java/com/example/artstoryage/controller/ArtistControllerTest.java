@@ -1,7 +1,5 @@
 package com.example.artstoryage.controller;
 
-import static org.mockito.BDDMockito.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,7 +43,7 @@ public class ArtistControllerTest {
             .email("email")
             .password(Password.encrypt("Test1234!@#$", new BCryptPasswordEncoder()))
             .phoneNumber("010-0000-0000")
-            .socialType(SocialType.Common)
+            .socialType(SocialType.COMMON)
             .memberRole(MemberRole.USER)
             .build();
 

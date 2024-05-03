@@ -16,7 +16,7 @@ public interface MemberCommandService {
 
   TokenResponse reissue(ReissueRequest request);
 
-  Member createOrGetKakaoMember(OAuthInfoResponse oAuthInfoResponse);
+  Member createOrGetSocialMember(OAuthInfoResponse oAuthInfoResponse);
 
-  AuthToken loginKakao(OAuthLoginParams params);
+  AuthToken loginSoical(OAuthLoginParams params);
 }

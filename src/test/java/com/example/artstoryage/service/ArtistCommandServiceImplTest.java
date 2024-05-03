@@ -42,7 +42,7 @@ public class ArtistCommandServiceImplTest {
             .email("email")
             .password(Password.encrypt("Test1234!@#$", new BCryptPasswordEncoder()))
             .phoneNumber("010-0000-0000")
-            .socialType(SocialType.Common)
+            .socialType(SocialType.COMMON)
             .memberRole(MemberRole.USER)
             .build();
 

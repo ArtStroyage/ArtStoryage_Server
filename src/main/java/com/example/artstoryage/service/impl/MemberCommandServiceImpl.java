@@ -119,23 +119,23 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   }
 
   @Override
-  public Member createOrGetKakaoMember(OAuthInfoResponse oAuthInfoResponse) {
+  public Member createOrGetSocialMember(OAuthInfoResponse oAuthInfoResponse) {
     List<Long> termList = Arrays.asList(1L, 2L);
 
-    // ToDO - 나중에 카카오에서 비즈앱 승인하면 이메일로 검색
+    // ToDO - 나중에 카카오, 네이버에서 비즈앱 승인하면 이메일로 검색
     Optional<Member> findMember = memberRepository.findByNickName(oAuthInfoResponse.getNickname());
     if (findMember.isPresent()) {
       return findMember.get();
     } else {
       return signUpMember(
-          MemberConverter.toMemberKakaoRequest(oAuthInfoResponse, termList, password));
+          MemberConverter.toMemberSocialRequest(oAuthInfoResponse, termList, password));
     }
   }
 
   @Override
-  public AuthToken loginKakao(OAuthLoginParams params) {
+  public AuthToken loginSoical(OAuthLoginParams params) {
     OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
-    Long userId = createOrGetKakaoMember(oAuthInfoResponse).getId();
+    Long userId = createOrGetSocialMember(oAuthInfoResponse).getId();
     return authTokensGenerator.generate(userId);
   }
 }
