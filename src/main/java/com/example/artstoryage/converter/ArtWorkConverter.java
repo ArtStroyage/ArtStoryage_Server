@@ -30,30 +30,30 @@ public class ArtWorkConverter {
         .build();
   }
 
-  public static RegArtWorkResponse toRegArtWorkResponse(ArtWork artWork) {
-    return RegArtWorkResponse.builder()
+  public static ArtWorkResponse toRegArtWorkResponse(ArtWork artWork) {
+    return ArtWorkResponse.builder()
         .artWorkId(artWork.getId())
         .title(artWork.getTitle())
         .isReg(artWork.getIsReg())
         .build();
   }
 
-  public static List<RegArtWorkResponse> toRegArtWorkResponseList(List<ArtWork> artWorkList) {
-    List<RegArtWorkResponse> responseList = new ArrayList<>();
+  public static List<ArtWorkByArtistResponse> toRegArtWorkResponseList(List<ArtWork> artWorkList) {
+    List<ArtWorkByArtistResponse> responseList = new ArrayList<>();
 
     for (ArtWork artWork : artWorkList) {
-      RegArtWorkResponse response =
-          RegArtWorkResponse.builder().artWorkId(artWork.getId()).title(artWork.getTitle()).build();
-      responseList.add(response);
+      responseList.add(
+          ArtWorkByArtistResponse.builder()
+              .artWorkId(artWork.getId())
+              .title(artWork.getTitle())
+              .isReg(artWork.getIsReg())
+              .build());
     }
 
     return responseList;
   }
 
-  public static AllowArtWorkResponse toAllowArtWorkResponse(ArtWork artWork) {
-    return AllowArtWorkResponse.builder()
-        .title(artWork.getTitle())
-        .isReg(artWork.getIsReg())
-        .build();
+  public static ArtWorkResponse toApprovedArtWorkResponse(ArtWork artWork) {
+    return ArtWorkResponse.builder().title(artWork.getTitle()).isReg(artWork.getIsReg()).build();
   }
 }

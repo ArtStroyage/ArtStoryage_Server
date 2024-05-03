@@ -71,7 +71,8 @@ public enum GlobalErrorCode {
   DUPLICATE_ARTIEST(HttpStatus.BAD_REQUEST, "이미 작가 정보가 등록되어 있습니다."),
 
   // ArtWork
-  ARTWORK_NOT_FOUND(HttpStatus.NOT_FOUND, "작품을 찾을 수 없습니다.");
+  ARTWORK_NOT_FOUND(HttpStatus.NOT_FOUND, "작품을 찾을 수 없습니다."),
+  ARTWORK_NOT_APPROVED(HttpStatus.BAD_REQUEST, "승인되지 않은 작품입니다.");
 
   private final HttpStatus httpStatus;
   private final String message;

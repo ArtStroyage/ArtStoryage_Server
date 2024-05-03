@@ -37,7 +37,7 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
   }
 
   @Override
-  public ArtWork allowArtWork(Long artWorkId) {
+  public ArtWork approveArtWork(Long artWorkId) {
     ArtWork artWork =
         artWorkRepository
             .findById(artWorkId)

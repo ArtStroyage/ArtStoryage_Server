@@ -30,4 +30,18 @@ public class ArtWorkQueryServiceImpl implements ArtWorkQueryService {
 
     return artWorkList;
   }
+
+  @Override
+  public ArtWork getApprovedArtWork(Long artWorkId) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    if (!artWork.getIsReg()) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_APPROVED);
+    }
+
+    return artWork;
+  }
 }
