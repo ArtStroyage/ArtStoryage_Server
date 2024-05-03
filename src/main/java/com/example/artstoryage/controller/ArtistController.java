@@ -8,9 +8,11 @@ import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.ArtistConverter;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.ArtistRequestDto.CreateArtistRequest;
+import com.example.artstoryage.dto.response.ArtistResponseDto.*;
 import com.example.artstoryage.dto.response.ArtistResponseDto.CreateArtistResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.service.ArtistCommandService;
+import com.example.artstoryage.service.ArtistQueryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ArtistController {
 
   private final ArtistCommandService artistCommandService;
+  private final ArtistQueryService artistQueryService;
 
   @Operation(summary = "작가 정보 등록 API", description = "작가 정보를 등록합니다")
   @ApiResponses({@ApiResponse(responseCode = "201", description = "성공")})
@@ -37,5 +40,14 @@ public class ArtistController {
     return BaseResponse.onSuccess(
         GlobalErrorCode.CREATED,
         ArtistConverter.toCreateArtistResponse(artistCommandService.createArtist(member, request)));
+  }
+
+  @Operation(summary = "작가 정보 조회 API", description = "작가 정보를 조회합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @GetMapping("{artistId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<GetArtistResponse> getArtist(@Parameter @PathVariable Long artistId) {
+    return BaseResponse.onSuccess(
+        ArtistConverter.toGetArtistResponse(artistQueryService.getArtist(artistId)));
   }
 }
