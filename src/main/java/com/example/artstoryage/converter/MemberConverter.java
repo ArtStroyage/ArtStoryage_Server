@@ -31,7 +31,7 @@ public class MemberConverter {
         .email(request.getEmail())
         .password(Password.encrypt(request.getPassword(), encoder))
         .phoneNumber(request.getPhoneNumber())
-        .socialType(SocialType.Common)
+        .socialType(SocialType.COMMON)
         .memberRole(MemberRole.USER)
         .build();
   }
@@ -72,7 +72,7 @@ public class MemberConverter {
         .build();
   }
 
-  public static TokenResponse toKakaoLogin(AuthToken authToken) {
+  public static TokenResponse toSocialLogin(AuthToken authToken) {
     return TokenResponse.builder()
         .accessToken(authToken.getAccessToken())
         .refreshToken(authToken.getRefreshToken())
@@ -80,7 +80,7 @@ public class MemberConverter {
   }
 
   // ToDo - 나중에 비즈앱으로 전환 시 다른 Member 요소 추가
-  public static SignUpMemberRequest toMemberKakaoRequest(
+  public static SignUpMemberRequest toMemberSocialRequest(
       OAuthInfoResponse oAuthInfoResponse, List<Long> termList, String password) {
     return SignUpMemberRequest.builder()
         .nickName(oAuthInfoResponse.getNickname())

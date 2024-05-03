@@ -12,6 +12,7 @@ import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberRespon
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.kakao.KakaoLoginParams;
+import com.example.artstoryage.naver.NaverLoginParams;
 import com.example.artstoryage.service.MemberCommandService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,7 +58,7 @@ public class MemberController {
     return BaseResponse.onSuccess(memberCommandService.reissue(request));
   }
 
-  @Operation(summary = "카카오 API", description = "카카오로그인을 합니다.")
+  @Operation(summary = "카카오 로그인 API", description = "카카오 로그인을 합니다.")
   @ApiResponses({
     @ApiResponse(responseCode = "201", description = "성공"),
   })
@@ -65,6 +66,16 @@ public class MemberController {
   @ResponseStatus(HttpStatus.CREATED)
   public BaseResponse<TokenResponse> loginKakao(@RequestBody KakaoLoginParams params) {
     return BaseResponse.onSuccess(
-        MemberConverter.toKakaoLogin(memberCommandService.loginKakao(params)));
+        MemberConverter.toSocialLogin(memberCommandService.loginSoical(params)));
+  }
+
+  @Operation(summary = "네이버 로그인 API", description = "네이버 로그인을 합니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "성공"),
+  })
+  @PostMapping("/naver")
+  public BaseResponse<TokenResponse> loginNaver(@RequestBody NaverLoginParams params) {
+    return BaseResponse.onSuccess(
+        MemberConverter.toSocialLogin(memberCommandService.loginSoical(params)));
   }
 }

@@ -34,7 +34,8 @@ public class SecurityConfig {
     "api/v1/members/signup",
     "api/v1/members/login",
     "api/v1/members/reissue",
-    "api/v1/members/kakao"
+    "api/v1/members/kakao",
+    "api/v1/members/naver"
   };
 
   @Bean

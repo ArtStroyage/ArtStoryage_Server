@@ -1,4 +1,4 @@
-package com.example.artstoryage.kakao;
+package com.example.artstoryage.naver;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -18,32 +18,32 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class KakaoApiClient implements OAuthApiClient {
+public class NaverApiClient implements OAuthApiClient {
 
   private static final String GRANT_TYPE = "authorization_code";
 
-  @Value("${oauth.kakao.url.auth}")
+  @Value("${oauth.naver.url.auth}")
   private String authUrl;
 
-  @Value("${oauth.kakao.url.api}")
+  @Value("${oauth.naver.url.api}")
   private String apiUrl;
 
-  @Value("${oauth.kakao.client-id}")
+  @Value("${oauth.naver.client-id}")
   private String clientId;
 
-  @Value("${oauth.kakao.client-secret}")
+  @Value("${oauth.naver.secret}")
   private String clientSecret;
 
   private final RestTemplate restTemplate;
 
   @Override
   public OAuthProvider oAuthProvider() {
-    return OAuthProvider.KAKAO;
+    return OAuthProvider.NAVER;
   }
 
   @Override
   public String requestAccessToken(OAuthLoginParams params) {
-    String url = authUrl + "/oauth/token";
+    String url = authUrl + "/oauth2.0/token";
 
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -55,7 +55,7 @@ public class KakaoApiClient implements OAuthApiClient {
 
     HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-    KakaoToken response = restTemplate.postForObject(url, request, KakaoToken.class);
+    NaverToken response = restTemplate.postForObject(url, request, NaverToken.class);
 
     assert response != null;
     return response.getAccessToken();
@@ -63,18 +63,16 @@ public class KakaoApiClient implements OAuthApiClient {
 
   @Override
   public OAuthInfoResponse requestOauthInfo(String accessToken) {
-    String url = apiUrl + "/v2/user/me";
+    String url = apiUrl + "/v1/nid/me";
 
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     httpHeaders.set("Authorization", "Bearer " + accessToken);
 
-    // ToDo - 비즈앱 전환 시 동의 항목 Member 요소 추가
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-    body.add("property_keys", "[\"kakao_account.profile\"]");
 
     HttpEntity<?> request = new HttpEntity<>(body, httpHeaders);
 
-    return restTemplate.postForObject(url, request, KakaoInfoResponse.class);
+    return restTemplate.postForObject(url, request, NaverInfoResponse.class);
   }
 }
