@@ -69,7 +69,7 @@ cloud:
     s3:
       bucket: ${S3_BUCKET_NAME}
     region:
-      static: %{S3_REGION}
+      static: ${S3_REGION}
       auto: false
     stack:
       auto: false
