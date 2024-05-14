@@ -31,4 +31,15 @@ public class MemberRequestDto {
 
     String refreshToken;
   }
+
+  @Getter
+  public static class PhoneNumberRequest {
+    String phoneNumber;
+  }
+
+  @Getter
+  public static class VerifyPhoneNumberRequest {
+    String phoneNumber;
+    String code;
+  }
 }

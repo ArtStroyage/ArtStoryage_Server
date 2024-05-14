@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -20,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -77,5 +80,23 @@ public class MemberController {
   public BaseResponse<TokenResponse> loginNaver(@RequestBody NaverLoginParams params) {
     return BaseResponse.onSuccess(
         MemberConverter.toSocialLogin(memberCommandService.loginSoical(params)));
+  }
+
+  @Operation(summary = "문자 전송 API", description = "전화번호 인증 문자를 전송합니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "성공"),
+  })
+  @PostMapping("/send-one")
+  public SingleMessageSentResponse sendMessage(@RequestBody PhoneNumberRequest request) {
+    return memberCommandService.sendMessage(request);
+  }
+
+  @Operation(summary = "인증번호 확인 API", description = "인증번호를 검증합니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "201", description = "성공"),
+  })
+  @PostMapping("/checkcode")
+  public BaseResponse<Boolean> isVerifyNumber(@RequestBody VerifyPhoneNumberRequest request) {
+    return BaseResponse.onSuccess(memberCommandService.isVerifyNumber(request));
   }
 }

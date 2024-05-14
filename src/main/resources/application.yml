@@ -73,3 +73,8 @@ cloud:
       auto: false
     stack:
       auto: false
+---
+coolsms:
+  apikey: ${SMS_API_KEY}
+  apisecret: ${SMS_API_SECRET}
+  fromnumber: ${SMS_FROM_NUMBER}

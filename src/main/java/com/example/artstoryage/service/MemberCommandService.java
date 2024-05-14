@@ -8,6 +8,8 @@ import com.example.artstoryage.oAuth.AuthToken;
 import com.example.artstoryage.oAuth.OAuthInfoResponse;
 import com.example.artstoryage.oAuth.OAuthLoginParams;
 
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+
 public interface MemberCommandService {
 
   Member signUpMember(SignUpMemberRequest request);
@@ -19,4 +21,8 @@ public interface MemberCommandService {
   Member createOrGetSocialMember(OAuthInfoResponse oAuthInfoResponse);
 
   AuthToken loginSoical(OAuthLoginParams params);
+
+  SingleMessageSentResponse sendMessage(PhoneNumberRequest request);
+
+  Boolean isVerifyNumber(VerifyPhoneNumberRequest request);
 }
