@@ -31,4 +31,9 @@ public class MemberRequestDto {
 
     String refreshToken;
   }
+
+  @Getter
+  public static class IsDuplicateEmailRequest {
+    String email;
+  }
 }
