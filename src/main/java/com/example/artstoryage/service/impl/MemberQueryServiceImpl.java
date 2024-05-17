@@ -23,4 +23,14 @@ public class MemberQueryServiceImpl implements MemberQueryService {
         .findById(memberId)
         .orElseThrow(() -> new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND));
   }
+
+  @Override
+  public Boolean isDuplicateEmail(String email) {
+    return !memberRepository.findByEmail(email).isPresent();
+  }
+
+  @Override
+  public Boolean isDuplicateNickName(String nickName) {
+    return !memberRepository.findByNickName(nickName).isPresent();
+  }
 }

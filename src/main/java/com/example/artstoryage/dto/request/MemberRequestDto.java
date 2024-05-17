@@ -42,4 +42,14 @@ public class MemberRequestDto {
     String phoneNumber;
     String code;
   }
+
+  @Getter
+  public static class IsDuplicateEmailRequest {
+    String email;
+  }
+
+  @Getter
+  public static class IsDuplicateNickNameRequest {
+    String nickName;
+  }
 }
