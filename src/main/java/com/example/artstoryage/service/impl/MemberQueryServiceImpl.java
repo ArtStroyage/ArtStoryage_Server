@@ -28,4 +28,9 @@ public class MemberQueryServiceImpl implements MemberQueryService {
   public Boolean isDuplicateEmail(String email) {
     return !memberRepository.findByEmail(email).isPresent();
   }
+
+  @Override
+  public Boolean isDuplicateNickName(String nickName) {
+    return !memberRepository.findByNickName(nickName).isPresent();
+  }
 }

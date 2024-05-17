@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.dto.request.MemberRequestDto.IsDuplicateEmailRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.IsDuplicateNickNameRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
@@ -89,5 +90,15 @@ public class MemberController {
   @PostMapping("/email-check")
   public BaseResponse<Boolean> isDuplicateNickName(@RequestBody IsDuplicateEmailRequest request) {
     return BaseResponse.onSuccess(memberQueryService.isDuplicateEmail(request.getEmail()));
+  }
+
+  @Operation(summary = "닉네임 중복 체크 API", description = "닉네임을 중복 확인합니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "성공"),
+  })
+  @PostMapping("/nickname-check")
+  public BaseResponse<Boolean> isDuplicateNickName(
+      @RequestBody IsDuplicateNickNameRequest request) {
+    return BaseResponse.onSuccess(memberQueryService.isDuplicateNickName(request.getNickName()));
   }
 }
