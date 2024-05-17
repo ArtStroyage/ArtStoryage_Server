@@ -33,6 +33,11 @@ public class MemberRequestDto {
   }
 
   @Getter
+  public static class IsDuplicateEmailRequest {
+    String email;
+  }
+
+  @Getter
   public static class IsDuplicateNickNameRequest {
     String nickName;
   }
