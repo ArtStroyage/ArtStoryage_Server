@@ -62,6 +62,7 @@ public enum GlobalErrorCode {
   REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 요청입니다."),
   NOT_FRIEND(HttpStatus.BAD_REQUEST, "친구가 아닌 회원입니다."),
   ITEM_NOT_PURCHASED(HttpStatus.NOT_FOUND, "구매한 아이템이 아닙니다."),
+  NUMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "인증번호가 유효하지 않습니다."),
   DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "중복된 닉네임이 존재합니다."),
 
   // Item

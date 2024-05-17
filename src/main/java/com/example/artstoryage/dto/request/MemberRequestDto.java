@@ -33,6 +33,17 @@ public class MemberRequestDto {
   }
 
   @Getter
+  public static class PhoneNumberRequest {
+    String phoneNumber;
+  }
+
+  @Getter
+  public static class VerifyPhoneNumberRequest {
+    String phoneNumber;
+    String code;
+  }
+
+  @Getter
   public static class IsDuplicateEmailRequest {
     String email;
   }
