@@ -25,4 +25,8 @@ public interface MemberCommandService {
   SingleMessageSentResponse sendMessage(PhoneNumberRequest request);
 
   Boolean isVerifyNumber(VerifyPhoneNumberRequest request);
+
+  SingleMessageSentResponse findEmailCodeSender(findEmailByNameAndPhoneNumberRequst request);
+
+  FindEmailResponse findEmail(Boolean check, String name, String phoneNumber);
 }

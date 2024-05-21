@@ -1,5 +1,7 @@
 package com.example.artstoryage.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +34,10 @@ public class MemberQueryServiceImpl implements MemberQueryService {
   @Override
   public Boolean isDuplicateNickName(String nickName) {
     return !memberRepository.findByNickName(nickName).isPresent();
+  }
+
+  @Override
+  public Optional<Member> findMemberByNameAndPhoneNumber(String name, String phoneNumber) {
+    return memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
   }
 }

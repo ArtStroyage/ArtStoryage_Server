@@ -40,7 +40,8 @@ public class SecurityConfig {
     "/api/v1/members/checkcode",
     "/api/v1/members/naver",
     "/api/v1/members/email-check",
-    "/api/v1/members/nickname-check"
+    "/api/v1/members/nickname-check",
+    "/api/v1/members/find-id"
   };
 
   @Bean

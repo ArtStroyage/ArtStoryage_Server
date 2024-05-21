@@ -12,6 +12,8 @@ import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.findEmailByNameAndPhoneNumberRequst;
+import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -121,5 +123,25 @@ public class MemberController {
   public BaseResponse<Boolean> isDuplicateNickName(
       @RequestBody IsDuplicateNickNameRequest request) {
     return BaseResponse.onSuccess(memberQueryService.isDuplicateNickName(request.getNickName()));
+  }
+
+  @Operation(summary = "아이디 찾기 문자 전송 API", description = "이름과 휴대폰 번호를 통해 아이디를 찾습니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "성공"),
+  })
+  @PostMapping("/find-id")
+  public SingleMessageSentResponse SendEmailByNameAndPhoneNumber(
+      @RequestBody findEmailByNameAndPhoneNumberRequst request) {
+    return memberCommandService.findEmailCodeSender(request);
+  }
+
+  @Operation(summary = "아이디 찾기 API", description = "이름과 휴대폰 번호를 통해 아이디를 찾습니다.")
+  @ApiResponses({
+    @ApiResponse(responseCode = "200", description = "성공"),
+  })
+  @GetMapping("/find-id")
+  public FindEmailResponse FindEmailByNameAndPhoneNumber(
+      @RequestParam String name, @RequestParam String phoneNumber, @RequestParam Boolean check) {
+    return memberCommandService.findEmail(check, name, phoneNumber);
   }
 }
