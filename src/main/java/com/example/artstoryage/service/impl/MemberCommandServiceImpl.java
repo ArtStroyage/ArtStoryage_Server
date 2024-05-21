@@ -20,6 +20,8 @@ import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.findEmailByNameAndPhoneNumberRequst;
+import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.exception.custom.MemberException;
@@ -30,6 +32,7 @@ import com.example.artstoryage.repository.MemberTermRepository;
 import com.example.artstoryage.repository.TermRepository;
 import com.example.artstoryage.security.provider.JwtAuthProvider;
 import com.example.artstoryage.service.MemberCommandService;
+import com.example.artstoryage.service.MemberQueryService;
 import com.example.artstoryage.util.MemberUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -53,6 +56,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   private final RequestOAuthInfoService requestOAuthInfoService;
   private final DefaultMessageService defaultMessageService;
   private final MemberUtil memberUtil;
+  private final MemberQueryService memberQueryService;
 
   @Value("${jwt.refresh-token-validity}")
   private Long refreshTokenValidityMilliseconds;
@@ -184,5 +188,26 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     memberUtil.deleteSmsCertification(request.getPhoneNumber());
 
     return true;
+  }
+
+  @Override
+  public SingleMessageSentResponse findEmailCodeSender(
+      findEmailByNameAndPhoneNumberRequst request) {
+    if (memberQueryService
+        .findMemberByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
+        .isPresent()) {
+      return sendMessage(MemberConverter.toPhoneNumberRequest(request.getPhoneNumber()));
+    }
+
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
+  }
+
+  @Override
+  public FindEmailResponse findEmail(Boolean check, String name, String phoneNumber) {
+    if (check) {
+      return MemberConverter.toFindEmailResponse(
+          memberQueryService.findMemberByNameAndPhoneNumber(name, phoneNumber).get().getEmail());
+    }
+    throw new MemberException(GlobalErrorCode.VERIFIED_NOT_DONE);
   }
 }

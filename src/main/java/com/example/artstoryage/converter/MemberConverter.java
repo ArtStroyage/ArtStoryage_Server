@@ -12,7 +12,9 @@ import com.example.artstoryage.domain.enums.SocialType;
 import com.example.artstoryage.domain.mapping.MemberTerm;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.domain.member.Password;
+import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
+import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.oAuth.AuthToken;
@@ -87,5 +89,13 @@ public class MemberConverter {
         .password(password)
         .agreedTerms(termList)
         .build();
+  }
+
+  public static PhoneNumberRequest toPhoneNumberRequest(String phoneNumber) {
+    return PhoneNumberRequest.builder().phoneNumber(phoneNumber).build();
+  }
+
+  public static FindEmailResponse toFindEmailResponse(String email) {
+    return FindEmailResponse.builder().email(email).build();
   }
 }

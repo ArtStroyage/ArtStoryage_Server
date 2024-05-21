@@ -33,6 +33,7 @@ public class MemberRequestDto {
   }
 
   @Getter
+  @Builder
   public static class PhoneNumberRequest {
     String phoneNumber;
   }
@@ -51,5 +52,11 @@ public class MemberRequestDto {
   @Getter
   public static class IsDuplicateNickNameRequest {
     String nickName;
+  }
+
+  @Getter
+  public static class findEmailByNameAndPhoneNumberRequst {
+    String name;
+    String phoneNumber;
   }
 }

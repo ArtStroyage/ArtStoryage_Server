@@ -1,5 +1,7 @@
 package com.example.artstoryage.service;
 
+import java.util.Optional;
+
 import com.example.artstoryage.domain.member.Member;
 
 public interface MemberQueryService {
@@ -8,4 +10,6 @@ public interface MemberQueryService {
   Boolean isDuplicateEmail(String email);
 
   Boolean isDuplicateNickName(String nickName);
+
+  Optional<Member> findMemberByNameAndPhoneNumber(String name, String phoneNumber);
 }
