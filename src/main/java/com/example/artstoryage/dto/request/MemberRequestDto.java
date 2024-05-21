@@ -55,8 +55,15 @@ public class MemberRequestDto {
   }
 
   @Getter
-  public static class findEmailByNameAndPhoneNumberRequst {
+  public static class FindEmailByNameAndPhoneNumberRequest {
     String name;
+    String phoneNumber;
+  }
+
+  @Getter
+  public static class FindPasswordByNameAndEmailAndPhoneNumberRequest {
+    String name;
+    String email;
     String phoneNumber;
   }
 }

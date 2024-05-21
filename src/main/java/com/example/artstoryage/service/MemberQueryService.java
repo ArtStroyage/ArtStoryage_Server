@@ -12,4 +12,7 @@ public interface MemberQueryService {
   Boolean isDuplicateNickName(String nickName);
 
   Optional<Member> findMemberByNameAndPhoneNumber(String name, String phoneNumber);
+
+  Optional<Member> findMemberByNameAndEmailAndPhoneNumber(
+      String name, String email, String phoneNumber);
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.MemberConverter;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindEmailByNameAndPhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.IsDuplicateEmailRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.IsDuplicateNickNameRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
@@ -12,7 +13,6 @@ import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.findEmailByNameAndPhoneNumberRequst;
 import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
@@ -131,7 +131,7 @@ public class MemberController {
   })
   @PostMapping("/find-id")
   public SingleMessageSentResponse SendEmailByNameAndPhoneNumber(
-      @RequestBody findEmailByNameAndPhoneNumberRequst request) {
+      @RequestBody FindEmailByNameAndPhoneNumberRequest request) {
     return memberCommandService.findEmailCodeSender(request);
   }
 

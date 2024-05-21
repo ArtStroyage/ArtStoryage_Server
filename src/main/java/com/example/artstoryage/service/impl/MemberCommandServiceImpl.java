@@ -15,12 +15,13 @@ import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.domain.Term;
 import com.example.artstoryage.domain.mapping.MemberTerm;
 import com.example.artstoryage.domain.member.Member;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindEmailByNameAndPhoneNumberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindPasswordByNameAndEmailAndPhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.findEmailByNameAndPhoneNumberRequst;
 import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -192,7 +193,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
   @Override
   public SingleMessageSentResponse findEmailCodeSender(
-      findEmailByNameAndPhoneNumberRequst request) {
+      FindEmailByNameAndPhoneNumberRequest request) {
     if (memberQueryService
         .findMemberByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
         .isPresent()) {
@@ -209,5 +210,17 @@ public class MemberCommandServiceImpl implements MemberCommandService {
           memberQueryService.findMemberByNameAndPhoneNumber(name, phoneNumber).get().getEmail());
     }
     throw new MemberException(GlobalErrorCode.VERIFIED_NOT_DONE);
+  }
+
+  @Override
+  public SingleMessageSentResponse findPasswordCodeSender(
+      FindPasswordByNameAndEmailAndPhoneNumberRequest request) {
+    if (memberQueryService
+        .findMemberByNameAndEmailAndPhoneNumber(
+            request.getName(), request.getEmail(), request.getPhoneNumber())
+        .isPresent()) {
+      return sendMessage(MemberConverter.toPhoneNumberRequest(request.getPhoneNumber()));
+    }
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
   }
 }
