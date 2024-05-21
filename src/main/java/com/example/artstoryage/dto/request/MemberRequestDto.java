@@ -66,4 +66,9 @@ public class MemberRequestDto {
     String email;
     String phoneNumber;
   }
+
+  @Getter
+  public static class ChangePasswordRequest {
+    String password;
+  }
 }

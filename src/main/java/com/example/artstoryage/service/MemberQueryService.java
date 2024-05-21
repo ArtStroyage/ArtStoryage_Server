@@ -15,4 +15,6 @@ public interface MemberQueryService {
 
   Optional<Member> findMemberByNameAndEmailAndPhoneNumber(
       String name, String email, String phoneNumber);
+
+  Optional<Member> findMemberByPhoneNumber(String phoneNumber);
 }
