@@ -53,30 +53,62 @@ public class ArtWorkController {
             artWorkCommandService.approveArtWork(artWorkId)));
   }
 
-  @Operation(summary = "승인된 작품 정보 조회 API", description = "승인된 작품의 정보 조회")
+  @Operation(summary = "작품 정보 조회 API", description = "작품의 정보 조회")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
-  @GetMapping("/approved/{artWorkId}")
+  @GetMapping("/{artWorkId}")
   @ResponseStatus(HttpStatus.OK)
   public BaseResponse<ArtWorkResponse> getArtWork(@Parameter @PathVariable Long artWorkId) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toApprovedArtWorkResponse(
-            artWorkQueryService.getApprovedArtWork(artWorkId)));
+        ArtWorkConverter.toArtWorkResponse(artWorkQueryService.getArtWork(artWorkId)));
+  }
+
+  @Operation(summary = "작품 검색 API", description = "작품을 검색합니다.")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @GetMapping("/keyword/{keyWord}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<List<ArtWorksByKeyWordResponse>> getArtWorksByKeyWord(
+      @Parameter @PathVariable String keyWord) {
+    return BaseResponse.onSuccess(
+        ArtWorkConverter.toArtWorksByKeyWordResponseList(
+            artWorkQueryService.getArtWorksByContainsKeyWord(keyWord)));
+  }
+
+  @Operation(summary = "승인된 작품 검색 API", description = "승인된 작품을 검색합니다.")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @GetMapping("/approved/keyword/{keyWord}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<List<ArtWorksByKeyWordResponse>> getApprovedArtWorksByKeyWord(
+      @Parameter @PathVariable String keyWord) {
+    return BaseResponse.onSuccess(
+        ArtWorkConverter.toArtWorksByKeyWordResponseList(
+            artWorkQueryService.getApprovedArtWorksByContainsKeyWord(keyWord)));
+  }
+
+  @Operation(summary = "작가별 승인된 작품 목록 조회 API", description = "작가별 승인된 작품 목록을 조회합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @GetMapping("/approved/artist/{artistId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<List<ArtWorksByArtistResponse>> getArtWorksByArtist(
+      @Parameter @PathVariable Long artistId) {
+    return BaseResponse.onSuccess(
+        ArtWorkConverter.toArtWorksByArtistResponseList(
+            artWorkQueryService.getApprovedArtWorksByArtist(artistId)));
   }
 
   @Operation(summary = "작가별 작품 목록 조회 API", description = "작가별 작품 목록을 조회합니다")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/artist/{artistId}")
   @ResponseStatus(HttpStatus.OK)
-  public BaseResponse<List<ArtWorkByArtistResponse>> getArtWorksByArtist(
+  public BaseResponse<List<ArtWorksByArtistResponse>> getApprovedArtWorksByArtist(
       @Parameter @PathVariable Long artistId) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toRegArtWorkResponseList(
+        ArtWorkConverter.toArtWorksByArtistResponseList(
             artWorkQueryService.getArtWorksByArtist(artistId)));
   }
 
   @Operation(summary = "작품 등록 신청 수정 API", description = "작품 등록 신청을 수정합니다")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
-  @PutMapping("/{artWorkId}")
+  @PutMapping("/registration/{artWorkId}")
   @ResponseStatus(HttpStatus.OK)
   public BaseResponse<ArtWorkResponse> updateRegArtWork(
       @Parameter @PathVariable Long artWorkId, @RequestBody UpdateArtWorkRequest request) {

@@ -5,7 +5,13 @@ import java.util.List;
 import com.example.artstoryage.domain.ArtWork;
 
 public interface ArtWorkQueryService {
-  List<ArtWork> getArtWorksByArtist(Long artistId);
+  ArtWork getArtWork(Long artWorkId);
 
-  ArtWork getApprovedArtWork(Long artWorkId);
+  List<ArtWork> getArtWorksByArtist(Long artWorkId);
+
+  List<ArtWork> getApprovedArtWorksByArtist(Long artistId);
+
+  List<ArtWork> getArtWorksByContainsKeyWord(String keyword);
+
+  List<ArtWork> getApprovedArtWorksByContainsKeyWord(String keyword);
 }
