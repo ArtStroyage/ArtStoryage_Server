@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.example.artstoryage.domain.ArtWork;
 import com.example.artstoryage.domain.Artist;
-import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
-import com.example.artstoryage.dto.response.ArtWorkResponseDto.*;
+import com.example.artstoryage.dto.request.ArtWorkRequestDto.RegArtWorkRequest;
+import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorkResponse;
+import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorksByArtistResponse;
+import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorksByKeyWordResponse;
 
 @Component
 public class ArtWorkConverter {
@@ -37,12 +39,13 @@ public class ArtWorkConverter {
         .build();
   }
 
-  public static List<ArtWorkByArtistResponse> toRegArtWorkResponseList(List<ArtWork> artWorkList) {
-    List<ArtWorkByArtistResponse> responseList = new ArrayList<>();
+  public static List<ArtWorksByArtistResponse> toArtWorksByArtistResponseList(
+      List<ArtWork> artWorkList) {
+    List<ArtWorksByArtistResponse> responseList = new ArrayList<>();
 
     for (ArtWork artWork : artWorkList) {
       responseList.add(
-          ArtWorkByArtistResponse.builder()
+          ArtWorksByArtistResponse.builder()
               .artWorkId(artWork.getId())
               .title(artWork.getTitle())
               .isReg(artWork.getIsReg())
@@ -52,8 +55,27 @@ public class ArtWorkConverter {
     return responseList;
   }
 
+  public static List<ArtWorksByKeyWordResponse> toArtWorksByKeyWordResponseList(
+      List<ArtWork> artWorkList) {
+    List<ArtWorksByKeyWordResponse> responseList = new ArrayList<>();
+
+    for (ArtWork artWork : artWorkList) {
+      responseList.add(
+          ArtWorksByKeyWordResponse.builder()
+              .artWorkId(artWork.getId())
+              .title(artWork.getTitle())
+              .build());
+    }
+
+    return responseList;
+  }
+
   public static ArtWorkResponse toApprovedArtWorkResponse(ArtWork artWork) {
-    return ArtWorkResponse.builder().title(artWork.getTitle()).isReg(artWork.getIsReg()).build();
+    return ArtWorkResponse.builder().title(artWork.getTitle()).build();
+  }
+
+  public static ArtWorkResponse toArtWorkResponse(ArtWork artWork) {
+    return ArtWorkResponse.builder().title(artWork.getTitle()).build();
   }
 
   public static ArtWorkResponse toUpdatedArtWorkResponse(ArtWork artWork) {
