@@ -15,12 +15,15 @@ import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.domain.Term;
 import com.example.artstoryage.domain.mapping.MemberTerm;
 import com.example.artstoryage.domain.member.Member;
+import com.example.artstoryage.domain.member.Password;
+import com.example.artstoryage.dto.request.MemberRequestDto.ChangePasswordRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindEmailByNameAndPhoneNumberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindPasswordByNameAndEmailAndPhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.findEmailByNameAndPhoneNumberRequst;
 import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -178,7 +181,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   }
 
   @Override
-  public Boolean isVerifyNumber(VerifyPhoneNumberRequest request) {
+  public Optional<Member> isVerifyNumber(VerifyPhoneNumberRequest request) {
     if (!((memberUtil.hasKey(request.getPhoneNumber()))
         && memberUtil.getSmsCertification(request.getPhoneNumber()).equals(request.getCode()))) {
 
@@ -187,12 +190,12 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     memberUtil.deleteSmsCertification(request.getPhoneNumber());
 
-    return true;
+    return memberQueryService.findMemberByPhoneNumber(request.getPhoneNumber());
   }
 
   @Override
   public SingleMessageSentResponse findEmailCodeSender(
-      findEmailByNameAndPhoneNumberRequst request) {
+      FindEmailByNameAndPhoneNumberRequest request) {
     if (memberQueryService
         .findMemberByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
         .isPresent()) {
@@ -203,11 +206,34 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   }
 
   @Override
-  public FindEmailResponse findEmail(Boolean check, String name, String phoneNumber) {
-    if (check) {
-      return MemberConverter.toFindEmailResponse(
-          memberQueryService.findMemberByNameAndPhoneNumber(name, phoneNumber).get().getEmail());
+  public FindEmailResponse findEmail(Optional<Member> member) {
+    if (member.isPresent()) {
+      return MemberConverter.toFindEmailResponse(member.get().getEmail());
     }
     throw new MemberException(GlobalErrorCode.VERIFIED_NOT_DONE);
+  }
+
+  @Override
+  public SingleMessageSentResponse findPasswordCodeSender(
+      FindPasswordByNameAndEmailAndPhoneNumberRequest request) {
+    if (memberQueryService
+        .findMemberByNameAndEmailAndPhoneNumber(
+            request.getName(), request.getEmail(), request.getPhoneNumber())
+        .isPresent()) {
+      return sendMessage(MemberConverter.toPhoneNumberRequest(request.getPhoneNumber()));
+    }
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
+  }
+
+  @Override
+  public String findPassword(Optional<Member> member, ChangePasswordRequest request) {
+
+    if (member.isPresent()) {
+      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      member.get().setPassword(Password.encrypt(request.getPassword(), encoder));
+      return request.getPassword();
+    }
+
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
   }
 }

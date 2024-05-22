@@ -40,4 +40,15 @@ public class MemberQueryServiceImpl implements MemberQueryService {
   public Optional<Member> findMemberByNameAndPhoneNumber(String name, String phoneNumber) {
     return memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
   }
+
+  @Override
+  public Optional<Member> findMemberByNameAndEmailAndPhoneNumber(
+      String name, String email, String phoneNumber) {
+    return memberRepository.findByNameAndEmailAndPhoneNumber(name, email, phoneNumber);
+  }
+
+  @Override
+  public Optional<Member> findMemberByPhoneNumber(String phoneNumber) {
+    return memberRepository.findByPhoneNumber(phoneNumber);
+  }
 }

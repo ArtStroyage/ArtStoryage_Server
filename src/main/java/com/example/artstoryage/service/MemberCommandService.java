@@ -1,5 +1,7 @@
 package com.example.artstoryage.service;
 
+import java.util.Optional;
+
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.MemberRequestDto.*;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
@@ -24,9 +26,14 @@ public interface MemberCommandService {
 
   SingleMessageSentResponse sendMessage(PhoneNumberRequest request);
 
-  Boolean isVerifyNumber(VerifyPhoneNumberRequest request);
+  Optional<Member> isVerifyNumber(VerifyPhoneNumberRequest request);
 
-  SingleMessageSentResponse findEmailCodeSender(findEmailByNameAndPhoneNumberRequst request);
+  SingleMessageSentResponse findEmailCodeSender(FindEmailByNameAndPhoneNumberRequest request);
 
-  FindEmailResponse findEmail(Boolean check, String name, String phoneNumber);
+  FindEmailResponse findEmail(Optional<Member> member);
+
+  SingleMessageSentResponse findPasswordCodeSender(
+      FindPasswordByNameAndEmailAndPhoneNumberRequest request);
+
+  String findPassword(Optional<Member> member, ChangePasswordRequest request);
 }
