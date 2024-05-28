@@ -72,8 +72,9 @@ public enum GlobalErrorCode {
 
   // ArtWork
   ARTWORK_NOT_FOUND(HttpStatus.NOT_FOUND, "작품을 찾을 수 없습니다."),
-  ARTWORK_NOT_APPROVED(HttpStatus.BAD_REQUEST, "승인되지 않은 작품입니다.");
-
+  ARTWORK_NOT_APPROVED(HttpStatus.BAD_REQUEST, "승인되지 않은 작품입니다."),
+  ARTWORK_AUCTION_NOT_STARTED(HttpStatus.BAD_REQUEST, "경매가 시작되지 않은 작품입니다."),
+  ARTWORK_AUCTION_CLOSED(HttpStatus.BAD_REQUEST, "경매가 종료된 작품입니다.");
   private final HttpStatus httpStatus;
   private final String message;
 }

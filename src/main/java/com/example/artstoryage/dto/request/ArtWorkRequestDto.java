@@ -30,4 +30,14 @@ public class ArtWorkRequestDto {
     String intention;
     Integer auctionStartPrice;
   }
+
+  @Getter
+  public static class RegAuctionArtWorkRequest {
+    Integer day;
+  }
+
+  @Getter
+  public static class BidAuctionRequest {
+    Integer bidPrice;
+  }
 }

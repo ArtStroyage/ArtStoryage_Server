@@ -1,5 +1,7 @@
 package com.example.artstoryage.service.impl;
 
+import java.time.LocalDateTime;
+
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -67,5 +69,53 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
     }
 
     artWorkRepository.deleteById(artWorkId);
+  }
+
+  @Override
+  public ArtWork regAuctionArtWork(Long artWorkId, RegAuctionArtWorkRequest request) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTIST_NOT_FOUND));
+
+    if (!artWork.getIsReg()) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_APPROVED);
+    }
+
+    artWork.regAuctionArtWork(request);
+
+    return artWork;
+  }
+
+  @Override
+  public void cancelAuctionArtWork(Long artWorkId) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    artWork.cancelAuctionArtWork();
+  }
+
+  @Override
+  public ArtWork bidAuctionArtWork(Long artWorkId, BidAuctionRequest request, Member member) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    if (!artWork.getIsAuction()) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_NOT_STARTED);
+    } else if (LocalDateTime.now().isAfter(artWork.getAuctionClosingTime())) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_CLOSED);
+    } else if (request.getBidPrice() % 10000 != 0) {
+      throw new IllegalArgumentException("입찰가의 단위는 1만원입니다.");
+    } else if (request.getBidPrice() <= artWork.getAuctionStartPrice()) {
+      throw new IllegalArgumentException("현재 가격보다 큰 값만 입력할 수 있습니다");
+    }
+
+    artWork.bidAuctionArtWork(request, member);
+
+    return artWork;
   }
 }

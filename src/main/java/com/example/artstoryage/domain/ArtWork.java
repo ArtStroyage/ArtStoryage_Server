@@ -10,7 +10,10 @@ import jakarta.persistence.*;
 import com.example.artstoryage.domain.common.BaseEntity;
 import com.example.artstoryage.domain.mapping.ArtWorkPrice;
 import com.example.artstoryage.domain.mapping.ArtWorkWish;
-import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
+import com.example.artstoryage.domain.member.Member;
+import com.example.artstoryage.dto.request.ArtWorkRequestDto.BidAuctionRequest;
+import com.example.artstoryage.dto.request.ArtWorkRequestDto.RegAuctionArtWorkRequest;
+import com.example.artstoryage.dto.request.ArtWorkRequestDto.UpdateArtWorkRequest;
 
 import lombok.*;
 
@@ -63,6 +66,20 @@ public class ArtWork extends BaseEntity {
     this.isReg = true;
   }
 
+  public void regAuctionArtWork(RegAuctionArtWorkRequest request) {
+    if (request.getDay() < 1 || request.getDay() > 10) {
+      throw new IllegalArgumentException("경매 기간은 최소 1일, 최대 10일 입니다.");
+    }
+
+    this.isAuction = true;
+    this.auctionClosingTime = LocalDateTime.now().plusDays(request.getDay());
+  }
+
+  public void cancelAuctionArtWork() {
+    this.isAuction = false;
+    this.auctionClosingTime = null;
+  }
+
   public void updateArtWork(UpdateArtWorkRequest request) {
     this.imageLink = request.getImageLink();
     this.title = request.getTitle();
@@ -73,5 +90,13 @@ public class ArtWork extends BaseEntity {
     this.description = request.getDescription();
     this.intention = request.getIntention();
     this.auctionStartPrice = request.getAuctionStartPrice();
+  }
+
+  public void bidAuctionArtWork(BidAuctionRequest request, Member member) {
+    ArtWorkPrice artWorkPrice =
+        ArtWorkPrice.builder().price(request.getBidPrice()).member(member).artWork(this).build();
+
+    artWorkPrices.add(artWorkPrice);
+    auctionStartPrice = request.getBidPrice();
   }
 }

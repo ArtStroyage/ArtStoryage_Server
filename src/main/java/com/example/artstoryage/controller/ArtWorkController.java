@@ -126,4 +126,39 @@ public class ArtWorkController {
     artWorkCommandService.deleteArtWork(artWorkId);
     return BaseResponse.onSuccess(GlobalErrorCode.DELETED);
   }
+
+  @Operation(summary = "작품 경매 시작 API", description = "작품 경매를 시작합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @PutMapping("/auction/{artWorkId}")
+  @ResponseStatus(HttpStatus.OK)
+  public BaseResponse<ArtWorkResponse> regAuctionArtWork(
+      @Parameter @PathVariable Long artWorkId, @RequestBody RegAuctionArtWorkRequest request) {
+    return BaseResponse.onSuccess(
+        GlobalErrorCode.UPDATED,
+        ArtWorkConverter.toRegAuctionArtWorkResponse(
+            artWorkCommandService.regAuctionArtWork(artWorkId, request)));
+  }
+
+  @Operation(summary = "작품 경매 취소 API", description = "작품 경매를 취소합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @PutMapping("/auction/cancel/{artWorkId}")
+  public BaseResponse<GlobalErrorCode> cancelAuctionArtwork(
+      @Parameter @PathVariable Long artWorkId) {
+    artWorkCommandService.cancelAuctionArtWork(artWorkId);
+    return BaseResponse.onSuccess(GlobalErrorCode.UPDATED);
+  }
+
+  @Operation(summary = "작품 경매 입찰 API", description = "작품 경매 입찰합니다")
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
+  @PutMapping("/auction/bid/{artWorkId}")
+  public BaseResponse<ArtWorkResponse> BidAuctionArtwork(
+      @Parameter(hidden = true) @AuthMember Member member,
+      @Parameter @PathVariable Long artWorkId,
+      @RequestBody BidAuctionRequest request) {
+
+    return BaseResponse.onSuccess(
+        GlobalErrorCode.UPDATED,
+        ArtWorkConverter.toBidAuctionResponse(
+            artWorkCommandService.bidAuctionArtWork(artWorkId, request, member)));
+  }
 }
