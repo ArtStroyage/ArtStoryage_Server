@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.example.artstoryage.domain.ArtWork;
 import com.example.artstoryage.domain.Artist;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
-import com.example.artstoryage.dto.response.ArtWorkResponseDto;
 import com.example.artstoryage.dto.response.ArtWorkResponseDto.*;
 
 @Component
@@ -64,18 +63,6 @@ public class ArtWorkConverter {
               .artWorkId(artWork.getId())
               .title(artWork.getTitle())
               .build());
-    }
-
-    return responseList;
-  }
-
-  public static List<ArtWorkResponseDto.ArtWorksResponse> toArtWorksResponseList(
-      List<ArtWork> artWorkList) {
-    List<ArtWorksResponse> responseList = new ArrayList<>();
-
-    for (ArtWork artWork : artWorkList) {
-      responseList.add(
-          ArtWorksResponse.builder().artWorkId(artWork.getId()).title(artWork.getTitle()).build());
     }
 
     return responseList;
