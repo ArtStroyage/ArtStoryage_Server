@@ -45,4 +45,14 @@ public class ArtWorkResponseDto {
     String title;
     Boolean isReg;
   }
+
+  @Getter
+  @Builder
+  @NoArgsConstructor(access = AccessLevel.PROTECTED)
+  @AllArgsConstructor(access = AccessLevel.PROTECTED)
+  public static class ArtWorkByContainsKeyWordResponse {
+    Long artWorkId;
+    String title;
+    Boolean isReg;
+  }
 }
