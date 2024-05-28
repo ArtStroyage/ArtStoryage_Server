@@ -39,7 +39,7 @@ public class ArtWorkController {
       @Parameter(hidden = true) @AuthMember Member member, @RequestBody RegArtWorkRequest request) {
     return BaseResponse.onSuccess(
         GlobalErrorCode.CREATED,
-        ArtWorkConverter.toRegArtWorkResponse(artWorkCommandService.regArtWork(member, request)));
+        ArtWorkConverter.toArtWorkResponse(artWorkCommandService.regArtWork(member, request)));
   }
 
   @Operation(summary = "작품 등록 승인 API", description = "작품 등록을 승인합니다")
@@ -49,8 +49,7 @@ public class ArtWorkController {
   public BaseResponse<ArtWorkResponse> regArtWork(@Parameter @PathVariable Long artWorkId) {
     return BaseResponse.onSuccess(
         GlobalErrorCode.UPDATED,
-        ArtWorkConverter.toApprovedArtWorkResponse(
-            artWorkCommandService.approveArtWork(artWorkId)));
+        ArtWorkConverter.toArtWorkResponse(artWorkCommandService.approveArtWork(artWorkId)));
   }
 
   @Operation(summary = "작품 정보 조회 API", description = "작품의 정보 조회")
@@ -66,10 +65,10 @@ public class ArtWorkController {
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/keyword/{keyWord}")
   @ResponseStatus(HttpStatus.OK)
-  public BaseResponse<List<ArtWorksByKeyWordResponse>> getArtWorksByKeyWord(
+  public BaseResponse<List<ArtWorkListResponse>> getArtWorksByKeyWord(
       @Parameter @PathVariable String keyWord) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toArtWorksByKeyWordResponseList(
+        ArtWorkConverter.toArtWorkListResponse(
             artWorkQueryService.getArtWorksByContainsKeyWord(keyWord)));
   }
 
@@ -77,10 +76,10 @@ public class ArtWorkController {
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/approved/keyword/{keyWord}")
   @ResponseStatus(HttpStatus.OK)
-  public BaseResponse<List<ArtWorksByKeyWordResponse>> getApprovedArtWorksByKeyWord(
+  public BaseResponse<List<ArtWorkListResponse>> getApprovedArtWorksByKeyWord(
       @Parameter @PathVariable String keyWord) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toArtWorksByKeyWordResponseList(
+        ArtWorkConverter.toArtWorkListResponse(
             artWorkQueryService.getApprovedArtWorksByContainsKeyWord(keyWord)));
   }
 
@@ -88,10 +87,10 @@ public class ArtWorkController {
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/approved/artist/{artistId}")
   @ResponseStatus(HttpStatus.OK)
-  public BaseResponse<List<ArtWorksByArtistResponse>> getArtWorksByArtist(
+  public BaseResponse<List<ArtWorkListResponse>> getArtWorksByArtist(
       @Parameter @PathVariable Long artistId) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toArtWorksByArtistResponseList(
+        ArtWorkConverter.toArtWorkListResponse(
             artWorkQueryService.getApprovedArtWorksByArtist(artistId)));
   }
 
@@ -99,11 +98,10 @@ public class ArtWorkController {
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/artist/{artistId}")
   @ResponseStatus(HttpStatus.OK)
-  public BaseResponse<List<ArtWorksByArtistResponse>> getApprovedArtWorksByArtist(
+  public BaseResponse<List<ArtWorkListResponse>> getApprovedArtWorksByArtist(
       @Parameter @PathVariable Long artistId) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toArtWorksByArtistResponseList(
-            artWorkQueryService.getArtWorksByArtist(artistId)));
+        ArtWorkConverter.toArtWorkListResponse(artWorkQueryService.getArtWorksByArtist(artistId)));
   }
 
   @Operation(summary = "작품 등록 신청 수정 API", description = "작품 등록 신청을 수정합니다")
@@ -114,7 +112,7 @@ public class ArtWorkController {
       @Parameter @PathVariable Long artWorkId, @RequestBody UpdateArtWorkRequest request) {
     return BaseResponse.onSuccess(
         GlobalErrorCode.UPDATED,
-        ArtWorkConverter.toUpdatedArtWorkResponse(
+        ArtWorkConverter.toArtWorkResponse(
             artWorkCommandService.updateRegArtWork(artWorkId, request)));
   }
 
@@ -135,7 +133,7 @@ public class ArtWorkController {
       @Parameter @PathVariable Long artWorkId, @RequestBody RegAuctionArtWorkRequest request) {
     return BaseResponse.onSuccess(
         GlobalErrorCode.UPDATED,
-        ArtWorkConverter.toRegAuctionArtWorkResponse(
+        ArtWorkConverter.toArtWorkAuctionResponse(
             artWorkCommandService.regAuctionArtWork(artWorkId, request)));
   }
 
@@ -151,14 +149,13 @@ public class ArtWorkController {
   @Operation(summary = "작품 경매 입찰 API", description = "작품 경매 입찰합니다")
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @PutMapping("/auction/bid/{artWorkId}")
-  public BaseResponse<ArtWorkResponse> BidAuctionArtwork(
+  public BaseResponse<ArtWorkResponse> bidAuctionArtwork(
       @Parameter(hidden = true) @AuthMember Member member,
       @Parameter @PathVariable Long artWorkId,
       @RequestBody BidAuctionRequest request) {
-
     return BaseResponse.onSuccess(
         GlobalErrorCode.UPDATED,
-        ArtWorkConverter.toBidAuctionResponse(
+        ArtWorkConverter.toArtWorkAuctionResponse(
             artWorkCommandService.bidAuctionArtWork(artWorkId, request, member)));
   }
 }

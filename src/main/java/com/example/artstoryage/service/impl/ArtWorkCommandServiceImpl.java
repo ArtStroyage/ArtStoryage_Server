@@ -1,14 +1,16 @@
 package com.example.artstoryage.service.impl;
 
+import static com.example.artstoryage.converter.ArtWorkConverter.*;
+
 import java.time.LocalDateTime;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.artstoryage.converter.ArtWorkConverter;
 import com.example.artstoryage.domain.ArtWork;
 import com.example.artstoryage.domain.Artist;
+import com.example.artstoryage.domain.mapping.ArtWorkPrice;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -35,7 +37,7 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
             .findByMember(member)
             .orElseThrow(() -> new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND));
 
-    return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
+    return artWorkRepository.save(toArtWork(request, artist));
   }
 
   @Override
@@ -109,12 +111,13 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
     } else if (LocalDateTime.now().isAfter(artWork.getAuctionClosingTime())) {
       throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_CLOSED);
     } else if (request.getBidPrice() % 10000 != 0) {
-      throw new IllegalArgumentException("입찰가의 단위는 1만원입니다.");
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_UNIT_INCORRECT);
     } else if (request.getBidPrice() <= artWork.getAuctionStartPrice()) {
-      throw new IllegalArgumentException("현재 가격보다 큰 값만 입력할 수 있습니다");
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_BIDPRICE_LESS);
     }
 
-    artWork.bidAuctionArtWork(request, member);
+    ArtWorkPrice artWorkPrice = toArtWorkPrice(request, artWork, member);
+    artWork.bidAuctionArtWork(artWorkPrice);
 
     return artWork;
   }

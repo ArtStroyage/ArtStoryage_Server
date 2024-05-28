@@ -31,26 +31,7 @@ public class ArtWorkResponseDto {
   @Builder
   @NoArgsConstructor(access = AccessLevel.PROTECTED)
   @AllArgsConstructor(access = AccessLevel.PROTECTED)
-  public static class ArtWorksByKeyWordResponse {
-    Long artWorkId;
-    String title;
-  }
-
-  @Getter
-  @Builder
-  @NoArgsConstructor(access = AccessLevel.PROTECTED)
-  @AllArgsConstructor(access = AccessLevel.PROTECTED)
-  public static class ArtWorksByArtistResponse {
-    Long artWorkId;
-    String title;
-    Boolean isReg;
-  }
-
-  @Getter
-  @Builder
-  @NoArgsConstructor(access = AccessLevel.PROTECTED)
-  @AllArgsConstructor(access = AccessLevel.PROTECTED)
-  public static class ArtWorkByContainsKeyWordResponse {
+  public static class ArtWorkListResponse {
     Long artWorkId;
     String title;
     Boolean isReg;

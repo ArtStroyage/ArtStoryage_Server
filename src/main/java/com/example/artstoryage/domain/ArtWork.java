@@ -10,8 +10,6 @@ import jakarta.persistence.*;
 import com.example.artstoryage.domain.common.BaseEntity;
 import com.example.artstoryage.domain.mapping.ArtWorkPrice;
 import com.example.artstoryage.domain.mapping.ArtWorkWish;
-import com.example.artstoryage.domain.member.Member;
-import com.example.artstoryage.dto.request.ArtWorkRequestDto.BidAuctionRequest;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.RegAuctionArtWorkRequest;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.UpdateArtWorkRequest;
 
@@ -92,11 +90,8 @@ public class ArtWork extends BaseEntity {
     this.auctionStartPrice = request.getAuctionStartPrice();
   }
 
-  public void bidAuctionArtWork(BidAuctionRequest request, Member member) {
-    ArtWorkPrice artWorkPrice =
-        ArtWorkPrice.builder().price(request.getBidPrice()).member(member).artWork(this).build();
-
+  public void bidAuctionArtWork(ArtWorkPrice artWorkPrice) {
     artWorkPrices.add(artWorkPrice);
-    auctionStartPrice = request.getBidPrice();
+    auctionStartPrice = artWorkPrice.getPrice();
   }
 }

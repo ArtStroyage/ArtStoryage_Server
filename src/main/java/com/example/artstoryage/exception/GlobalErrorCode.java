@@ -74,7 +74,11 @@ public enum GlobalErrorCode {
   ARTWORK_NOT_FOUND(HttpStatus.NOT_FOUND, "작품을 찾을 수 없습니다."),
   ARTWORK_NOT_APPROVED(HttpStatus.BAD_REQUEST, "승인되지 않은 작품입니다."),
   ARTWORK_AUCTION_NOT_STARTED(HttpStatus.BAD_REQUEST, "경매가 시작되지 않은 작품입니다."),
-  ARTWORK_AUCTION_CLOSED(HttpStatus.BAD_REQUEST, "경매가 종료된 작품입니다.");
+
+  // Auction
+  ARTWORK_AUCTION_CLOSED(HttpStatus.BAD_REQUEST, "경매가 종료된 작품입니다."),
+  ARTWORK_AUCTION_UNIT_INCORRECT(HttpStatus.BAD_REQUEST, "입찰가의 단위는 1만원입니다."),
+  ARTWORK_AUCTION_BIDPRICE_LESS(HttpStatus.BAD_REQUEST, "현재 가격보다 큰 값만 입력할 수 있습니다.");
   private final HttpStatus httpStatus;
   private final String message;
 }
