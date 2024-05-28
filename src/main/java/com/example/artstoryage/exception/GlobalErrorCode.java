@@ -48,6 +48,8 @@ public enum GlobalErrorCode {
   S3_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S3 명령 수행에 실패했습니다."),
   S3_FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3에 해당 파일이 없습니다."),
   INVALID_FILE(HttpStatus.UNPROCESSABLE_ENTITY, "처리할 수 없는 파일입니다."),
+  UPLOAD_NULL_FILE(HttpStatus.BAD_REQUEST, "업로드 요청을 보낸 파일이 없습니다."),
+  TOO_MANY_FILES(HttpStatus.BAD_REQUEST, "업로드 파일 수가 많습니다."),
 
   // Mission
   MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 미션이 존재하지 않습니다."),
@@ -60,7 +62,9 @@ public enum GlobalErrorCode {
   REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 요청입니다."),
   NOT_FRIEND(HttpStatus.BAD_REQUEST, "친구가 아닌 회원입니다."),
   ITEM_NOT_PURCHASED(HttpStatus.NOT_FOUND, "구매한 아이템이 아닙니다."),
-  ALREADY_SET_EARTHNAME(HttpStatus.BAD_REQUEST, "이미 지구 이름이 설정되어 있는 상태입니다."),
+  NUMBER_NOT_MATCH(HttpStatus.BAD_REQUEST, "인증번호가 유효하지 않습니다."),
+  DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "중복된 닉네임이 존재합니다."),
+  VERIFIED_NOT_DONE(HttpStatus.BAD_REQUEST, "인증이 완료되지 않았습니다."),
 
   // Item
   ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 아이템입니다."),

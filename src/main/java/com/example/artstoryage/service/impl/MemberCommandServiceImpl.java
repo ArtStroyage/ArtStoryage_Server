@@ -15,9 +15,16 @@ import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.domain.Term;
 import com.example.artstoryage.domain.mapping.MemberTerm;
 import com.example.artstoryage.domain.member.Member;
+import com.example.artstoryage.domain.member.Password;
+import com.example.artstoryage.dto.request.MemberRequestDto.ChangePasswordRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindEmailByNameAndPhoneNumberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.FindPasswordByNameAndEmailAndPhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
 import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
+import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.exception.custom.MemberException;
@@ -28,8 +35,14 @@ import com.example.artstoryage.repository.MemberTermRepository;
 import com.example.artstoryage.repository.TermRepository;
 import com.example.artstoryage.security.provider.JwtAuthProvider;
 import com.example.artstoryage.service.MemberCommandService;
+import com.example.artstoryage.service.MemberQueryService;
+import com.example.artstoryage.util.MemberUtil;
 
 import lombok.RequiredArgsConstructor;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Service
 @RequiredArgsConstructor
@@ -44,12 +57,18 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   private final RedisTemplate<String, String> redisTemplate;
   private final AuthTokenGenerator authTokensGenerator;
   private final RequestOAuthInfoService requestOAuthInfoService;
+  private final DefaultMessageService defaultMessageService;
+  private final MemberUtil memberUtil;
+  private final MemberQueryService memberQueryService;
 
   @Value("${jwt.refresh-token-validity}")
   private Long refreshTokenValidityMilliseconds;
 
   @Value("${virtual.password}")
   private String password;
+
+  @Value("${coolsms.fromnumber}")
+  private String phoneNumber;
 
   @Override
   public Member signUpMember(SignUpMemberRequest request) {
@@ -137,5 +156,84 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
     Long userId = createOrGetSocialMember(oAuthInfoResponse).getId();
     return authTokensGenerator.generate(userId);
+  }
+
+  @Override
+  public SingleMessageSentResponse sendMessage(PhoneNumberRequest request) {
+
+    if (memberUtil.hasKey(request.getPhoneNumber())) {
+      memberUtil.deleteSmsCertification(request.getPhoneNumber());
+    }
+
+    String randomNum = memberUtil.generateRandomNumber(6);
+
+    Message message = new Message();
+    message.setFrom(phoneNumber);
+    message.setTo(request.getPhoneNumber());
+    message.setText("[ArtStroyage]" + "인증번호는 " + randomNum + "입니다.");
+
+    SingleMessageSentResponse response =
+        this.defaultMessageService.sendOne(new SingleMessageSendingRequest(message));
+
+    memberUtil.createSmsCertification(request.getPhoneNumber(), randomNum);
+
+    return response;
+  }
+
+  @Override
+  public Optional<Member> isVerifyNumber(VerifyPhoneNumberRequest request) {
+    if (!((memberUtil.hasKey(request.getPhoneNumber()))
+        && memberUtil.getSmsCertification(request.getPhoneNumber()).equals(request.getCode()))) {
+
+      throw new MemberException(GlobalErrorCode.NUMBER_NOT_MATCH);
+    }
+
+    memberUtil.deleteSmsCertification(request.getPhoneNumber());
+
+    return memberQueryService.findMemberByPhoneNumber(request.getPhoneNumber());
+  }
+
+  @Override
+  public SingleMessageSentResponse findEmailCodeSender(
+      FindEmailByNameAndPhoneNumberRequest request) {
+    if (memberQueryService
+        .findMemberByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
+        .isPresent()) {
+      return sendMessage(MemberConverter.toPhoneNumberRequest(request.getPhoneNumber()));
+    }
+
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
+  }
+
+  @Override
+  public FindEmailResponse findEmail(Optional<Member> member) {
+    if (member.isPresent()) {
+      return MemberConverter.toFindEmailResponse(member.get().getEmail());
+    }
+    throw new MemberException(GlobalErrorCode.VERIFIED_NOT_DONE);
+  }
+
+  @Override
+  public SingleMessageSentResponse findPasswordCodeSender(
+      FindPasswordByNameAndEmailAndPhoneNumberRequest request) {
+    if (memberQueryService
+        .findMemberByNameAndEmailAndPhoneNumber(
+            request.getName(), request.getEmail(), request.getPhoneNumber())
+        .isPresent()) {
+      return sendMessage(MemberConverter.toPhoneNumberRequest(request.getPhoneNumber()));
+    }
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
+  }
+
+  @Override
+  public String findPassword(Optional<Member> member, ChangePasswordRequest request) {
+
+    if (member.isPresent()) {
+      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      member.get().setPassword(Password.encrypt(request.getPassword(), encoder));
+      return request.getPassword();
+    }
+
+    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
   }
 }

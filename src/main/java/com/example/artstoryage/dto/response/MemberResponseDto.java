@@ -25,4 +25,13 @@ public class MemberResponseDto {
     String accessToken;
     String refreshToken;
   }
+
+  @Getter
+  @Builder
+  @NoArgsConstructor(access = AccessLevel.PROTECTED)
+  @AllArgsConstructor(access = AccessLevel.PROTECTED)
+  public static class FindEmailResponse {
+
+    String email;
+  }
 }

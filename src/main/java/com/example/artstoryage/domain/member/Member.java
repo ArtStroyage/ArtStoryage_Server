@@ -71,4 +71,8 @@ public class Member extends BaseEntity {
   public void setArtist(Artist artist) {
     this.artist = artist;
   }
+
+  public void setPassword(Password password) {
+    this.password = password;
+  }
 }

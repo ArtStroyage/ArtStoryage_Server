@@ -65,6 +65,7 @@ public class ArtWorkController {
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/keyword/{keyWord}")
   @ResponseStatus(HttpStatus.OK)
+
   public BaseResponse<List<ArtWorkListResponse>> getArtWorksByKeyWord(
       @Parameter @PathVariable String keyWord) {
     return BaseResponse.onSuccess(
@@ -76,6 +77,7 @@ public class ArtWorkController {
   @ApiResponses({@ApiResponse(responseCode = "200", description = "성공")})
   @GetMapping("/approved/keyword/{keyWord}")
   @ResponseStatus(HttpStatus.OK)
+
   public BaseResponse<List<ArtWorkListResponse>> getApprovedArtWorksByKeyWord(
       @Parameter @PathVariable String keyWord) {
     return BaseResponse.onSuccess(
@@ -101,7 +103,8 @@ public class ArtWorkController {
   public BaseResponse<List<ArtWorkListResponse>> getApprovedArtWorksByArtist(
       @Parameter @PathVariable Long artistId) {
     return BaseResponse.onSuccess(
-        ArtWorkConverter.toArtWorkListResponse(artWorkQueryService.getArtWorksByArtist(artistId)));
+        ArtWorkConverter.toArtWorkListResponse(
+          artWorkQueryService.getArtWorksByArtist(artistId)));
   }
 
   @Operation(summary = "작품 등록 신청 수정 API", description = "작품 등록 신청을 수정합니다")

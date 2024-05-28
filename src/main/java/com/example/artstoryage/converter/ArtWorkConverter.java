@@ -32,8 +32,8 @@ public class ArtWorkConverter {
         .build();
   }
 
-  public static List<ArtWorkListResponse> toArtWorkListResponse(List<ArtWork> artWorkList) {
 
+  public static List<ArtWorkListResponse> toArtWorkListResponse(List<ArtWork> artWorkList) {
     return artWorkList.stream()
         .map(
             artWork ->
@@ -43,6 +43,7 @@ public class ArtWorkConverter {
                     .isReg(artWork.getIsReg())
                     .build())
         .collect(Collectors.toList());
+
   }
 
   public static ArtWorkResponse toArtWorkResponse(ArtWork artWork) {

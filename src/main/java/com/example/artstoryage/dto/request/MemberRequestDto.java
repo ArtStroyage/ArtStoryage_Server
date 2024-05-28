@@ -31,4 +31,44 @@ public class MemberRequestDto {
 
     String refreshToken;
   }
+
+  @Getter
+  @Builder
+  public static class PhoneNumberRequest {
+    String phoneNumber;
+  }
+
+  @Getter
+  public static class VerifyPhoneNumberRequest {
+    String phoneNumber;
+    String code;
+  }
+
+  @Getter
+  public static class IsDuplicateEmailRequest {
+    String email;
+  }
+
+  @Getter
+  public static class IsDuplicateNickNameRequest {
+    String nickName;
+  }
+
+  @Getter
+  public static class FindEmailByNameAndPhoneNumberRequest {
+    String name;
+    String phoneNumber;
+  }
+
+  @Getter
+  public static class FindPasswordByNameAndEmailAndPhoneNumberRequest {
+    String name;
+    String email;
+    String phoneNumber;
+  }
+
+  @Getter
+  public static class ChangePasswordRequest {
+    String password;
+  }
 }

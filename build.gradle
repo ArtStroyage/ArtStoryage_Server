@@ -96,7 +96,6 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-
     // JUnit5
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.assertj:assertj-core:3.23.1'
@@ -110,6 +109,12 @@ dependencies {
 
     // security test
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // Message
+    implementation 'net.nurigo:sdk:4.3.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
