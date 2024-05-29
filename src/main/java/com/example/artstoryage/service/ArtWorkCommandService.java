@@ -13,4 +13,10 @@ public interface ArtWorkCommandService {
   ArtWork updateRegArtWork(Long artWorkId, UpdateArtWorkRequest request);
 
   void deleteArtWork(Long artWorkId);
+
+  ArtWork regAuctionArtWork(Long artWorkId, RegAuctionArtWorkRequest request);
+
+  void cancelAuctionArtWork(Long artWorkId);
+
+  ArtWork bidAuctionArtWork(Long artWorkId, BidAuctionRequest request, Member member);
 }

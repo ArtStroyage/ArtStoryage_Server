@@ -1,12 +1,16 @@
 package com.example.artstoryage.service.impl;
 
+import static com.example.artstoryage.converter.ArtWorkConverter.*;
+
+import java.time.LocalDateTime;
+
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.artstoryage.converter.ArtWorkConverter;
 import com.example.artstoryage.domain.ArtWork;
 import com.example.artstoryage.domain.Artist;
+import com.example.artstoryage.domain.mapping.ArtWorkPrice;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -33,7 +37,7 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
             .findByMember(member)
             .orElseThrow(() -> new ArtistException(GlobalErrorCode.ARTIST_NOT_FOUND));
 
-    return artWorkRepository.save(ArtWorkConverter.toArtWork(request, artist));
+    return artWorkRepository.save(toArtWork(request, artist));
   }
 
   @Override
@@ -67,5 +71,54 @@ public class ArtWorkCommandServiceImpl implements ArtWorkCommandService {
     }
 
     artWorkRepository.deleteById(artWorkId);
+  }
+
+  @Override
+  public ArtWork regAuctionArtWork(Long artWorkId, RegAuctionArtWorkRequest request) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTIST_NOT_FOUND));
+
+    if (!artWork.getIsReg()) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_APPROVED);
+    }
+
+    artWork.regAuctionArtWork(request);
+
+    return artWork;
+  }
+
+  @Override
+  public void cancelAuctionArtWork(Long artWorkId) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    artWork.cancelAuctionArtWork();
+  }
+
+  @Override
+  public ArtWork bidAuctionArtWork(Long artWorkId, BidAuctionRequest request, Member member) {
+    ArtWork artWork =
+        artWorkRepository
+            .findById(artWorkId)
+            .orElseThrow(() -> new ArtWorkException(GlobalErrorCode.ARTWORK_NOT_FOUND));
+
+    if (!artWork.getIsAuction()) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_NOT_STARTED);
+    } else if (LocalDateTime.now().isAfter(artWork.getAuctionClosingTime())) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_CLOSED);
+    } else if (request.getBidPrice() % 10000 != 0) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_UNIT_INCORRECT);
+    } else if (request.getBidPrice() <= artWork.getAuctionStartPrice()) {
+      throw new ArtWorkException(GlobalErrorCode.ARTWORK_AUCTION_BIDPRICE_LESS);
+    }
+
+    ArtWorkPrice artWorkPrice = toArtWorkPrice(request, artWork, member);
+    artWork.bidAuctionArtWork(artWorkPrice);
+
+    return artWork;
   }
 }

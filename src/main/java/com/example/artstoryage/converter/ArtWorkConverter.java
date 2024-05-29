@@ -1,16 +1,17 @@
 package com.example.artstoryage.converter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.example.artstoryage.domain.ArtWork;
 import com.example.artstoryage.domain.Artist;
-import com.example.artstoryage.dto.request.ArtWorkRequestDto.RegArtWorkRequest;
+import com.example.artstoryage.domain.mapping.ArtWorkPrice;
+import com.example.artstoryage.domain.member.Member;
+import com.example.artstoryage.dto.request.ArtWorkRequestDto.*;
+import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorkListResponse;
 import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorkResponse;
-import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorksByArtistResponse;
-import com.example.artstoryage.dto.response.ArtWorkResponseDto.ArtWorksByKeyWordResponse;
 
 @Component
 public class ArtWorkConverter {
@@ -31,54 +32,21 @@ public class ArtWorkConverter {
         .build();
   }
 
-  public static ArtWorkResponse toRegArtWorkResponse(ArtWork artWork) {
-    return ArtWorkResponse.builder()
-        .artWorkId(artWork.getId())
-        .title(artWork.getTitle())
-        .isReg(artWork.getIsReg())
-        .build();
-  }
 
-  public static List<ArtWorksByArtistResponse> toArtWorksByArtistResponseList(
-      List<ArtWork> artWorkList) {
-    List<ArtWorksByArtistResponse> responseList = new ArrayList<>();
+  public static List<ArtWorkListResponse> toArtWorkListResponse(List<ArtWork> artWorkList) {
+    return artWorkList.stream()
+        .map(
+            artWork ->
+                ArtWorkListResponse.builder()
+                    .artWorkId(artWork.getId())
+                    .title(artWork.getTitle())
+                    .isReg(artWork.getIsReg())
+                    .build())
+        .collect(Collectors.toList());
 
-    for (ArtWork artWork : artWorkList) {
-      responseList.add(
-          ArtWorksByArtistResponse.builder()
-              .artWorkId(artWork.getId())
-              .title(artWork.getTitle())
-              .isReg(artWork.getIsReg())
-              .build());
-    }
-
-    return responseList;
-  }
-
-  public static List<ArtWorksByKeyWordResponse> toArtWorksByKeyWordResponseList(
-      List<ArtWork> artWorkList) {
-    List<ArtWorksByKeyWordResponse> responseList = new ArrayList<>();
-
-    for (ArtWork artWork : artWorkList) {
-      responseList.add(
-          ArtWorksByKeyWordResponse.builder()
-              .artWorkId(artWork.getId())
-              .title(artWork.getTitle())
-              .build());
-    }
-
-    return responseList;
-  }
-
-  public static ArtWorkResponse toApprovedArtWorkResponse(ArtWork artWork) {
-    return ArtWorkResponse.builder().title(artWork.getTitle()).build();
   }
 
   public static ArtWorkResponse toArtWorkResponse(ArtWork artWork) {
-    return ArtWorkResponse.builder().title(artWork.getTitle()).build();
-  }
-
-  public static ArtWorkResponse toUpdatedArtWorkResponse(ArtWork artWork) {
     return ArtWorkResponse.builder()
         .imageLink(artWork.getImageLink())
         .title(artWork.getTitle())
@@ -89,6 +57,23 @@ public class ArtWorkConverter {
         .description(artWork.getDescription())
         .intention(artWork.getIntention())
         .auctionStartPrice(artWork.getAuctionStartPrice())
+        .build();
+  }
+
+  public static ArtWorkResponse toArtWorkAuctionResponse(ArtWork artWork) {
+    return ArtWorkResponse.builder()
+        .title(artWork.getTitle())
+        .auctionStartPrice(artWork.getAuctionStartPrice())
+        .auctionClosingTime(artWork.getAuctionClosingTime())
+        .build();
+  }
+
+  public static ArtWorkPrice toArtWorkPrice(
+      BidAuctionRequest request, ArtWork artWork, Member member) {
+    return ArtWorkPrice.builder()
+        .price(request.getBidPrice())
+        .member(member)
+        .artWork(artWork)
         .build();
   }
 }
