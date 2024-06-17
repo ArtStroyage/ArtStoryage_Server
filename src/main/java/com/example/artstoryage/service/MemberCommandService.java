@@ -35,5 +35,7 @@ public interface MemberCommandService {
   SingleMessageSentResponse findPasswordCodeSender(
       FindPasswordByNameAndEmailAndPhoneNumberRequest request);
 
-  String findPassword(Optional<Member> member, ChangePasswordRequest request);
+  String isVerifiedNumber(VerifyCodeRequest request);
+
+  Member findPassword(String token, ChangePasswordRequest request);
 }

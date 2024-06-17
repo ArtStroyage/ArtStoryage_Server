@@ -8,19 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.example.artstoryage.common.BaseResponse;
 import com.example.artstoryage.converter.MemberConverter;
 import com.example.artstoryage.domain.member.Member;
-import com.example.artstoryage.dto.request.MemberRequestDto.ChangePasswordRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.FindEmailByNameAndPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.FindPasswordByNameAndEmailAndPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.IsDuplicateEmailRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.IsDuplicateNickNameRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
-import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
-import com.example.artstoryage.dto.response.MemberResponseDto.SignUpMemberResponse;
-import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
+import com.example.artstoryage.dto.request.MemberRequestDto.*;
+import com.example.artstoryage.dto.response.MemberResponseDto.*;
 import com.example.artstoryage.exception.GlobalErrorCode;
 import com.example.artstoryage.kakao.KakaoLoginParams;
 import com.example.artstoryage.naver.NaverLoginParams;
@@ -160,13 +149,20 @@ public class MemberController {
     return memberCommandService.findPasswordCodeSender(request);
   }
 
-  @Operation(summary = "비밀번호 찾기 문자 전송 API", description = "이름과 휴대폰 번호를 통해 아이디를 찾습니다.")
-  @ApiResponses({
-    @ApiResponse(responseCode = "201", description = "성공"),
-  })
-  @PutMapping("/find-password")
-  public BaseResponse<String> SendPasswordByNameAndEmailAndPhoneNumber(
-      @RequestBody ChangePasswordRequest request, Optional<Member> member) {
-    return BaseResponse.onSuccess(memberCommandService.findPassword(member, request));
+  @Operation(summary = "비밀번호 찾기 인증번호 검증 API", description = "문자를 통해 받은 인증번호를 검증합니다.")
+  @ApiResponse(responseCode = "201", description = "성공")
+  @PostMapping("/check-code")
+  public BaseResponse<String> checkCode(@RequestBody VerifyCodeRequest request) throws Exception {
+    return BaseResponse.onSuccess(memberCommandService.isVerifiedNumber(request));
+  }
+
+  @Operation(summary = "비밀번호 변경 API", description = "새 비밀번호로 변경합니다.")
+  @ApiResponse(responseCode = "201", description = "성공")
+  @PutMapping("/change-password")
+  public BaseResponse<ChangePasswordResponse> changePassword(
+      @RequestHeader String token, @RequestBody ChangePasswordRequest request) throws Exception {
+    return BaseResponse.onSuccess(
+        MemberConverter.toChangePasswordResponse(
+            memberCommandService.findPassword(token, request)));
   }
 }

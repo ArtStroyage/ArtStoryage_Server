@@ -68,6 +68,12 @@ public class MemberRequestDto {
   }
 
   @Getter
+  public static class VerifyCodeRequest {
+    String email;
+    String code;
+  }
+
+  @Getter
   public static class ChangePasswordRequest {
     String password;
   }

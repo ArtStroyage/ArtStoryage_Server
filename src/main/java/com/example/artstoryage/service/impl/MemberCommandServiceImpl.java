@@ -3,6 +3,7 @@ package com.example.artstoryage.service.impl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +17,7 @@ import com.example.artstoryage.domain.Term;
 import com.example.artstoryage.domain.mapping.MemberTerm;
 import com.example.artstoryage.domain.member.Member;
 import com.example.artstoryage.domain.member.Password;
-import com.example.artstoryage.dto.request.MemberRequestDto.ChangePasswordRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.FindEmailByNameAndPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.FindPasswordByNameAndEmailAndPhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.LoginMemberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.PhoneNumberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.ReissueRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.SignUpMemberRequest;
-import com.example.artstoryage.dto.request.MemberRequestDto.VerifyPhoneNumberRequest;
+import com.example.artstoryage.dto.request.MemberRequestDto.*;
 import com.example.artstoryage.dto.response.MemberResponseDto.FindEmailResponse;
 import com.example.artstoryage.dto.response.MemberResponseDto.TokenResponse;
 import com.example.artstoryage.exception.GlobalErrorCode;
@@ -36,7 +30,7 @@ import com.example.artstoryage.repository.TermRepository;
 import com.example.artstoryage.security.provider.JwtAuthProvider;
 import com.example.artstoryage.service.MemberCommandService;
 import com.example.artstoryage.service.MemberQueryService;
-import com.example.artstoryage.util.MemberUtil;
+import com.example.artstoryage.util.RedisUtil;
 
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.model.Message;
@@ -58,7 +52,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   private final AuthTokenGenerator authTokensGenerator;
   private final RequestOAuthInfoService requestOAuthInfoService;
   private final DefaultMessageService defaultMessageService;
-  private final MemberUtil memberUtil;
+  private final RedisUtil redisUtil;
   private final MemberQueryService memberQueryService;
 
   @Value("${jwt.refresh-token-validity}")
@@ -161,11 +155,11 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   @Override
   public SingleMessageSentResponse sendMessage(PhoneNumberRequest request) {
 
-    if (memberUtil.hasKey(request.getPhoneNumber())) {
-      memberUtil.deleteSmsCertification(request.getPhoneNumber());
+    if (redisUtil.hasKey(request.getPhoneNumber())) {
+      redisUtil.deleteSmsCertification(request.getPhoneNumber());
     }
 
-    String randomNum = memberUtil.generateRandomNumber(6);
+    String randomNum = redisUtil.generateRandomNumber(6);
 
     Message message = new Message();
     message.setFrom(phoneNumber);
@@ -175,20 +169,20 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     SingleMessageSentResponse response =
         this.defaultMessageService.sendOne(new SingleMessageSendingRequest(message));
 
-    memberUtil.createSmsCertification(request.getPhoneNumber(), randomNum);
+    redisUtil.createSmsCertification(request.getPhoneNumber(), randomNum);
 
     return response;
   }
 
   @Override
   public Optional<Member> isVerifyNumber(VerifyPhoneNumberRequest request) {
-    if (!((memberUtil.hasKey(request.getPhoneNumber()))
-        && memberUtil.getSmsCertification(request.getPhoneNumber()).equals(request.getCode()))) {
+    if (!((redisUtil.hasKey(request.getPhoneNumber()))
+        && redisUtil.getSmsCertification(request.getPhoneNumber()).equals(request.getCode()))) {
 
       throw new MemberException(GlobalErrorCode.NUMBER_NOT_MATCH);
     }
 
-    memberUtil.deleteSmsCertification(request.getPhoneNumber());
+    redisUtil.deleteSmsCertification(request.getPhoneNumber());
 
     return memberQueryService.findMemberByPhoneNumber(request.getPhoneNumber());
   }
@@ -226,14 +220,39 @@ public class MemberCommandServiceImpl implements MemberCommandService {
   }
 
   @Override
-  public String findPassword(Optional<Member> member, ChangePasswordRequest request) {
-
-    if (member.isPresent()) {
-      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-      member.get().setPassword(Password.encrypt(request.getPassword(), encoder));
-      return request.getPassword();
+  public String isVerifiedNumber(VerifyCodeRequest request) {
+    if (!((redisUtil.hasKey(request.getEmail())))
+        && redisUtil.getEmailCertification(request.getEmail()).equals(request.getCode())) {
+      throw new MemberException(GlobalErrorCode.NUMBER_NOT_MATCH);
     }
 
-    throw new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND);
+    redisUtil.deleteEmailCertification(request.getEmail());
+
+    Member member =
+        memberRepository
+            .findByEmail(request.getEmail())
+            .orElseThrow(() -> new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+    String token = UUID.randomUUID().toString();
+
+    redisUtil.createFindPasswordToken(token, member);
+    return token;
+  }
+
+  @Override
+  public Member findPassword(String token, ChangePasswordRequest request) {
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    Member member =
+        memberRepository
+            .findByEmail(redisUtil.getMemberByToken(token).trim())
+            .orElseThrow(() -> new MemberException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+    redisUtil.deleteFindPasswordToken(member.getEmail());
+
+    member.setPassword(Password.encrypt(request.getPassword(), encoder));
+
+    return memberRepository.save(member);
   }
 }
